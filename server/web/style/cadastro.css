@@ -56,10 +56,13 @@ h1{
 }
 
 #username, #password, #confirm_password{
-    margin: 10px;
+    font-weight: bold;
     text-align: center;
-    width: 175px;
+    border: none;
+    border-radius: 10px; /* Borda arredondada */
+    width: 200px;
     height: 25px;
+    margin-top: 10px;
 }
 
 .body_section_escolha1_select1{
@@ -70,7 +73,6 @@ h1{
 }
 
 /* cadastro */
-
 .form_cadastro{
     display: flex;
     flex-direction: column;
@@ -85,23 +87,29 @@ h1{
 
 .button-group .back-button,
 .form_cadastro .button_register {
-    padding: 5px 7px;
-    background-color: var(--cor-azul-4); /* Cor de fundo */
-    color: var(--cor-branco); /* Cor do texto */
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra do botão */
-    transition: background-color 0.3s, box-shadow 0.3s; /* Animação ao passar o mouse */
     width: 100px;
     height: 40px;
+    background-color: var(--cor-buttons); /* Cor de fundo profissional */
+    color: var(--cor-branco); /* Cor do texto */
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 10px; /* Borda arredondada */
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
+    box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
 }
 
 .button-group .back-button:hover,
 .form_cadastro .button_register:hover {
-    background-color: var(--cor-azul-3); /* Cor no hover */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte no hover */
+    background-color: var(--cor-azul-3); /* Alteração de cor no hover */
+    transform: scale(1.05); /* Pequeno efeito de aumento no hover */
 }
 
+.button-group .back-button:active,
+.form_cadastro .button_register:active {
+    transform: scale(0.95); /* Efeito de clique */
+    background-color: var(--cor-azul-4); /* Cor ao pressionar */
+}

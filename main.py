@@ -81,7 +81,6 @@ async def login(request: Request, login:User):
     else:
         return HTTPException(status_code=401, detail="Usuário ou senha inválidos")
 
-# Define a rota para a página de dashboard
 @app.get("/dashboard")
 async def dashboard(request: Request, username: str = None, office: str = None):
     if not username or username == "undefined":
@@ -93,8 +92,7 @@ async def dashboard(request: Request, username: str = None, office: str = None):
 @app.get("/cadastro")
 async def login():
     return FileResponse("server/web/cadastro.html")
-    
-# Define a rota para cadastrar novos usuários
+
 @app.post("/usuarios")
 async def create_user(request:Request, user:NewUser):
     conn = sqlite3.connect('server/database.db')
@@ -106,7 +104,6 @@ async def create_user(request:Request, user:NewUser):
     conn.commit()
     return {"message": "Usuário criado com sucesso!"}
 
-# Define a rota para obter todos os usuários
 @app.get("/usuarios")
 async def get_users():
     conn = sqlite3.connect('server/database.db')
@@ -115,7 +112,6 @@ async def get_users():
     users = cursor.fetchall()
     return [{"username": user[1], "password": user[2]} for user in users]
 
-# Define a rota para atualizar um usuário
 @app.put("/usuarios/{username}")
 async def update_user(username: str, password: str):
     conn = sqlite3.connect('server/database.db')
@@ -124,7 +120,6 @@ async def update_user(username: str, password: str):
     conn.commit()
     return {"message": "Usuário atualizado com sucesso!"}
 
-# Define a rota para deletar um usuário
 @app.delete("/usuarios/{username}")
 async def delete_user(username: str):
     conn = sqlite3.connect('server/database.db')
@@ -218,7 +213,7 @@ async def end_task(request: Request, data:dict):
 
 @app.get("/all-task")
 async def get_task(request: Request):
-    return templates.TemplateResponse("taskss.html", {"request": request})
+    return templates.TemplateResponse("tasks.html", {"request": request})
 
 @app.get("/all-task-data")
 async def get_task_data():
