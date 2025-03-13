@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Chamados</title>
+    <link rel="stylesheet" href="style/cadastro.css">
+</head>
+
+<header>
+    <section class="header_section03">
+        <section class="header_section01">
+            <h1>Controle de Chamados</h1>
+        </section>
+        <section class="header_section02">
+            <h2>Sistema de Gerenciamento de chamados para manutenção.</h2>
+        </section>
+    </section>
+    <div class="button-group">
+        <button class="back-button" onclick="history.back()">Voltar</button>
+    </div>
+</header>
+
+<body>
+    <section class="form_cadastro">
+        <h1 class="form_cadastro1">Cadastrar Usuário</h1>
+        <br>
+        <label for="username">Nome de Usuário:</label>
+        <input type="text" id="username" name="username"><br>
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <label for="confirm_password">Confirme a Senha:</label>
+        <input type="password" id="confirm_password" name="confirm_password"><br>
+
+        <label for="area">Selecione a Área:</label>
+        <select required class="body_section_escolha1_select1">
+            <option value="null" disabled selected>Selecione</option>
+            <option value="Mecânico">Mecânico</option>
+            <option value="Elétrico">Elétrico</option>
+            <option value="T.I.">T.I.</option>
+            <option value="Superior">Superior</option>
+        </select>
+        <br>
+        <button class="button_register">Cadastrar</button>
+    </section>
+</body>
+
+<footer>
+
+</footer>
+
+<script src="/scripts/cadastro.js"></script>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard: {{ username }}</title>
+    <link rel="stylesheet" href="style/dashboard.css">
+</head>
+<header>
+    <section class="header_section03">
+        <section class="header_section01">
+            <h1>Controle de Chamados</h1>
+        </section>
+        <section class="header_section02">
+            <h2>Sistema de Gerenciamento de chamados para manutenção.</h2>
+        </section>
+    </section>
+    <div class="button-group">
+        <button class="logout-button">Sair</button>
+    </div>
+</header>
+
+<body>
+    <section class="body_section_1_login">
+        <h1>Bem-vindo, <strong class="Name">{{ username }}</strong> </h1>
+        <div id="ContainerTasksButtons"></div>
+    </section>
+    <br>
+    <div id="dataContainer"></div>
+    
+</body>
+<footer>
+<strong class="Office">{{ office }}</strong>
+</footer>
+
+<script src="/scripts/dashboard.js"></script>
+</html>

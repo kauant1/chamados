@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Alata&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Krona+One&family=Montserrat:ital,wght@0,600;1,600&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+:root{
+    --cor-branco: #FFFFFF;
+    --cor-cinza: #C0C0C0;
+    --cor-vermelho: #ff0000;
+    --cor-buttons: #0056b3;
+    --cor-azul: #167bf7;
+    --cor-preto: #00030C;
+    --cor-azul-1: #010D26 ;
+    --cor-azul-2: #022859 ;
+    --cor-azul-3: #011C40 ;
+    --cor-azul-4: #03588C ;
+    --cor-azul-5: #049DBF ;
+    --azul-degrade: linear-gradient(97.54deg, #002F52 35.49%, #896f32 165.37%);
+    --Montserrat: "Montserrat", sans-serif;
+    --Krona-One: "Krona One", sans-serif;
+    --Alata: "Alata", sans-serif;
+    --Share-Tech-Mono: "Share Tech Mono", monospace;
+    --Kanit: "Kanit", sans-serif;
+}
+
+.header_section03 {
+    width: 131%; /* Garante que o header ocupe toda a largura da página */
+    background: linear-gradient(90deg,var(--cor-azul-4) 0%, var(--cor-azul-3) 100%);
+    position: relative; /* Garante que ele se posicione adequadamente */
+    margin: 0; /* Remove margens extras */
+    padding: 1px; /* Adiciona espaço interno */
+}
+
+body{
+    background-color: var(--cor-preto);
+    color: var(--cor-branco);
+    font-family: var(--Krona-One);
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.Name {
+    text-transform: capitalize;
+}
+
+.header_section01, .header_section02 {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 30px;
+
+}
+
+.header_section02{
+    font-size: 12px;
+}
+
+.body_section_escolha1, .body_section_escolha2 {
+    display: flex;
+    text-align: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.body_section_escolha1_title1, .body_section_escolha1_title2, .body_section_escolha2_title1{
+    color: var(--cor-vermelho);
+}
+
+.body_section_escolha2_input{
+    text-align: center;
+    height: 100px;
+    width: 300px;
+}
+
+.body_section_escolha1_select2, .body_section_escolha1_select1 {
+    width: 170px;
+    height: 30px;
+}
+    
+.body_section_escolha1_select1, .body_section_escolha1_select2, .body_section_escolha3,option{
+    text-align: center;
+}
+
+button{
+    width: 125px;
+    height: 90px;
+}
+
+.progresso::-webkit-progress-value {
+    background-color: var(--cor-azul);
+}
+
+.progresso::-webkit-progress-bar {
+    background-color: #ccc; /* Cor de fundo do progresso */
+}
+
+.progresso::-moz-progress-bar {
+    background-color: var(--cor-azul);
+}
+
+
+/* index */
+
+.body_section_1_login{
+    margin: 7px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.body_section_2_send {
+    margin: 22px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 250px;
+    flex-wrap: nowrap;
+}
+
+.input_login{
+    width: 175px;
+    height: 25px;
+}
+
+.button_send, .button_register, .button_get_task{
+    width: 110px;
+    height: 35px;
+}
+
+.button_reload_task {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+/* cadastro */
+
+.form_cadastro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+
+/* task */
+
+
+.section_task {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid var(--cor-azul);
+    flex-wrap: wrap;
+    padding: 15px;
+    width: 550px;
+    height: 300px;
+}
+
+#dataContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+}
+
+#ContainerTasksButtons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+    width: 400px;
+    height: 50px;
+    border: 2px solid var(--cor-azul-3);
+}
+
+.button-group {
+    padding: 15px 7px;
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+    flex-direction:row; /* Empilha os botões no celular */
+}
+
+.button-group .logout-button,
+.button-group .back-button,
+.button_get_task,
+.body_section_2_send .button_send,
+.body_section_2_send .button_register {
+    padding: 5px 7px;
+    background-color: var(--cor-azul-4); /* Cor de fundo */
+    color: var(--cor-branco); /* Cor do texto */
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra do botão */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Animação ao passar o mouse */
+    width: 100px;
+    height: 40px;
+}
+
+.button-group .logout-button:hover,
+.button-group .back-button:hover,
+.button_get_task:hover,
+.body_section_2_send .button_send:hover,
+.body_section_2_send .button_register:hover {
+    background-color: var(--cor-azul-3); /* Cor no hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte no hover */
+}
+
+#context-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+}
+
+#context-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#context-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#context-menu ul li:hover {
+    background-color: #eee;
+}
+
+.hidden {
+    display: none;
+}
+
+.action-buttons {
+    display: flex; /* Deixa os botões lado a lado */
+    gap: 15px; /* Espaçamento entre os botões */
+}
+
+.action-buttons button {
+    border: none;
+    padding: 6px; /* Reduz o tamanho do botão */
+    font-size: 20px; /* Reduz o tamanho do texto (ou emojis) */
+    width: 37px; /* Define uma largura específica */
+    height: 37px; /* Define uma altura específica */
+    background: transparent; /* Fundo transparente */
+    cursor: pointer; /* Mostra o cursor de clique */
+    display: flex;
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+}
+
+
+h1 {
+    text-align: center;
+}
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.task-table th, .task-table td {
+    border: 1px solid var(--cor-azul-3);
+    padding: 10px;
+    text-align: left;
+}
+
+.task-table th {
+    background-color: var(--cor-azul);
+}
+
+.task-table tr:nth-child(even) {
+    background-color: var(--cor-azul-4);
+}
+
+.task-table tr:nth-child(odd) {
+    background-color: var(--cor-azul-5);
+}
+
+.task-table tr:hover {
+    background-color: var(--cor-azul-2);
+}
+
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.task-table th, .task-table td {
+    border: 1px solid var(--cor-azul-3);
+    padding: 10px;
+    text-align: center;
+}
+
+.task-table th {
+    background-color: var(--cor-azul);
+}
+
+.task-table tr:nth-child(even) {
+    background-color: var(--cor-azul-4);
+}
+
+.emoji-cell {
+    font-size: 25px; /* Ajuste o tamanho dos emojis conforme necessário */
+}
