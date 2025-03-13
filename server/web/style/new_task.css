@@ -121,30 +121,35 @@ body{
 
 .button-group .logout-button,
 .button-group .back-button,
-.button_get_task,
-.body_section_2_send .button_send,
-.body_section_2_send .button_register {
-    padding: 5px 7px;
-    background-color: var(--cor-azul-4); /* Cor de fundo */
-    color: var(--cor-branco); /* Cor do texto */
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra do botão */
-    transition: background-color 0.3s, box-shadow 0.3s; /* Animação ao passar o mouse */
+.body_section_escolha3 .body_section_escolha3_button_1,
+.body_section_escolha3 .body_section_escolha3_button_2 {
     width: 100px;
     height: 40px;
+    background-color: var(--cor-buttons); /* Cor de fundo profissional */
+    color: var(--cor-branco); /* Cor do texto */
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px; /* Borda arredondada */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
+    box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
 }
 
 .button-group .logout-button:hover,
 .button-group .back-button:hover,
-.button_get_task:hover,
-.body_section_2_send .button_send:hover,
-.body_section_2_send .button_register:hover {
+.body_section_escolha3 .body_section_escolha3_button_1:hover,
+.body_section_escolha3 .body_section_escolha3_button_2:hover {
     background-color: var(--cor-azul-3); /* Cor no hover */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte no hover */
+}
+
+.button-group .logout-button,
+.button-group .back-button,
+.body_section_escolha3 .body_section_escolha3_button_1,
+.body_section_escolha3 .body_section_escolha3_button_2 {
+    transform: scale(0.95); /* Efeito de clique */
+    background-color: var(--cor-azul-4); /* Cor ao pressionar */
 }
 
 h1 {
