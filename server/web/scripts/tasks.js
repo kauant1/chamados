@@ -29,13 +29,13 @@ async function fetchTasks() {
             }  
             else if (index === 4) {
                 if (item === "Mecânico") {
-                    cell.textContent = `🛠️`;
+                    cell.textContent = `👨‍🔧`;
                     cell.classList.add("emoji-cell");
                 } else if (item === "T.I.") {
-                    cell.textContent = `🔮`;
+                    cell.textContent = `💻`;
                     cell.classList.add("emoji-cell");
                 } else if (item === "Elétrico") {
-                    cell.textContent = `💡`;
+                    cell.textContent = `⚡`;
                     cell.classList.add("emoji-cell");
                 } else {
                     cell.textContent = item; // Caso não seja "Mecânico" ou "T.I."
