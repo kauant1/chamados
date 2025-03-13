@@ -101,6 +101,7 @@ h1 {
     margin-top: 20px; /* Distância dos botões para outros elementos */
 }
 
+/* botões */
 .button_get_task, .button_reload_task,
 .button-group .logout-button {
     width: 110px;

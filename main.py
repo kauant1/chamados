@@ -218,7 +218,7 @@ async def end_task(request: Request, data:dict):
 
 @app.get("/all-task")
 async def get_task(request: Request):
-    return templates.TemplateResponse("tasks.html", {"request": request})
+    return templates.TemplateResponse("taskss.html", {"request": request})
 
 @app.get("/all-task-data")
 async def get_task_data():
