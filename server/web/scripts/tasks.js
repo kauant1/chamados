@@ -7,44 +7,102 @@ async function fetchTasks() {
         const row = document.createElement("tr");
         task.forEach((item, index) => {
             const cell = document.createElement("td");
-            // Alteração: Coluna "Finalizada"
+            // if (index === 7) {
+            //     cell.textContent = item === "true" ? "✅" : "❎";
+            //     cell.classList.add("emoji-cell");
+            // } funcionando 
             if (index === 7) { // Supondo que a coluna "Finalizada" é o índice 7
-                cell.textContent = item === "true" ? "✔️" : "❌"; // Define o emoji com base no valor
-                cell.classList.add("emoji-cell"); // Adiciona classe para centralização e ajuste do emoji
-            } 
-            
+                const img = document.createElement("img"); // Cria o elemento de imagem
+                img.src = item === "true" ? "https://cdn-icons-png.flaticon.com/128/6782/6782609.png" : "https://cdn-icons-png.flaticon.com/128/6782/6782613.png"; // Define o caminho da imagem com base no valor
+                img.alt = item === "true" ? "Finalizado" : "Não finalizado"; // Define um texto alternativo descritivo
+                img.classList.add("emoji-cell-img"); // Adiciona uma classe para customizar as imagens
+                cell.appendChild(img); // Adiciona o elemento de imagem à célula
+            }
+
             // Alteração: Colunas "Inicio" e "Termino"
-            else if (index === 8 || index === 9) { // Supondo que "Inicio" é índice 8 e "Termino" é índice 9
-                cell.textContent = item === "Null" ? `⏱️` : item; // Adiciona emoji de ampulheta quando for "Null"
-                if (item === "Null") cell.classList.add("emoji-cell"); // Adiciona classe apenas se houver emoji
-            } 
+            // else if (index === 8 || index === 9) {
+            //     cell.textContent = item === "Null" ? `⏱️` : item;
+            //     if (item === "Null") cell.classList.add("emoji-cell");
+            // }
+            else if (index === 8 || index === 9) {
+                if (item === "Null") {
+                    const img = document.createElement("img");
+                    img.src = "https://cdn-icons-png.flaticon.com/512/6782/6782783.png";
+                    img.alt = "Null Image";
+                    cell.appendChild(img);
+                    img.classList.add("emoji-cell-img");
+                } else {
+                    cell.textContent = item; // Exibe o texto caso não seja "Null"
+                }
+            }
+            
             // Alteração: Coluna "Profissional"
             else if (index === 6) { // Supondo que "Profissional" é o índice 6
-                cell.textContent = item === "aguardando" ? `👻` : item; // Adiciona emoji de ampulheta para "aguardando"
-                if (item === "aguardando") cell.classList.add("emoji-cell"); // Adiciona classe apenas se houver emoji
-            }  
+                if (item === "aguardando") {
+                    const img = document.createElement("img");
+                    img.src = "https://cdn-icons-png.flaticon.com/512/6782/6782783.png";
+                    img.alt = "Null Image";
+                    cell.appendChild(img);
+                    img.classList.add("emoji-cell-img");
+                } else {
+                    cell.textContent = item; // Exibe o texto caso não seja "Null"
+                }
+            }
+
             else if (index === 10) { // Supondo que "Duracao" é o índice 10
-                cell.textContent = item === "00:00:00" ? `🔄` : item;
-                if (item === "00:00:00") cell.classList.add("emoji-cell"); // Adiciona classe apenas se houver emoji
-            }  
+                if (item === "00:00:00") {
+                    const img = document.createElement("img");
+                    img.src = "https://cdn-icons-png.flaticon.com/128/5293/5293489.png";
+                    img.alt = "Ícone";
+                    img.classList.add("emoji-cell"); // Adiciona a classe ao elemento de imagem
+                    cell.textContent = ""; // Limpa o conteúdo anterior
+                    cell.appendChild(img); // Adiciona o elemento de imagem à célula
+                    img.classList.add("emoji-cell-img");
+                } else {
+                    cell.textContent = item; // Exibe o valor do texto normalmente
+                }
+            }
+            
+
             else if (index === 4) {
                 if (item === "Mecânico") {
-                    cell.textContent = `👨‍🔧`;
-                    cell.classList.add("emoji-cell");
+                    if (item === "Mecânico") {
+                        const img = document.createElement("img");
+                        img.src = "https://cdn-icons-png.flaticon.com/128/2494/2494496.png";
+                        img.alt = "Null Image";
+                        cell.appendChild(img);
+                        img.classList.add("emoji-cell-img");
+                    } else {
+                        cell.textContent = item; // Exibe o texto caso não seja "Null"
+                    }
                 } else if (item === "T.I.") {
-                    cell.textContent = `💻`;
-                    cell.classList.add("emoji-cell");
+                    if (item === "T.I.") {
+                        const img = document.createElement("img");
+                        img.src = "https://cdn-icons-png.flaticon.com/128/874/874890.png";
+                        img.alt = "Null Image";
+                        cell.appendChild(img);
+                        img.classList.add("emoji-cell-img");
+                    } else {
+                        cell.textContent = item; // Exibe o texto caso não seja "Null"
+                    }
                 } else if (item === "Elétrico") {
-                    cell.textContent = `⚡`;
-                    cell.classList.add("emoji-cell");
+                    if (item === "Elétrico") {
+                        const img = document.createElement("img");
+                        img.src = "https://cdn-icons-png.flaticon.com/128/5556/5556061.png";
+                        img.alt = "Null Image";
+                        cell.appendChild(img);
+                        img.classList.add("emoji-cell-img");
+                    } else {
+                        cell.textContent = item; // Exibe o texto caso não seja "Null"
+                    }
                 } else {
                     cell.textContent = item; // Caso não seja "Mecânico" ou "T.I."
                 }
             }
-            
             else {
                 cell.textContent = item; // Preenche as demais células normalmente
             }
+
             // cell.textContent = item;
             row.appendChild(cell);
         });
@@ -55,11 +113,20 @@ async function fetchTasks() {
         buttonContainer.className = "action-buttons";
 
         const editButton = document.createElement("button");
-        editButton.textContent = "✏️";
-        editButton.addEventListener("click", () => editTask(task[0])); // Assumindo que task[0] seja o ID
+        const img = document.createElement("img");
+        img.src = "https://cdn-icons-png.flaticon.com/128/84/84380.png";
+        img.classList.add("emoji-cell-img");
+        // editButton.textContent = "✏️";
+        editButton.appendChild(img);
+        editButton.addEventListener("click", () => editTask(task[0]));
+
 
         const deleteButton = document.createElement("button");
-        deleteButton.textContent = "🗑️";
+        const img1 = document.createElement("img");
+        img1.src = "https://cdn-icons-png.flaticon.com/128/54/54324.png";
+        img1.classList.add("emoji-cell-img");
+        // deleteButton.textContent = "🗑️";
+        deleteButton.appendChild(img1)
         deleteButton.addEventListener("click", () => deleteTask(task[0]));
 
         buttonContainer.appendChild(editButton);

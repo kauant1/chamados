@@ -18,6 +18,12 @@
     --cor-azul-3: #011C40 ;
     --cor-azul-4: #03588C ;
     --cor-azul-5: #049DBF ;
+    --Fondo-Azul-1: #023E73;
+    --Fondo-Azul-2: #023059;
+    --Fondo-Azul-3: #03658C;
+    --Fondo-Azul-4: #0388A6;
+    --Fondo-Azul-5: #04ADBF;
+
     --azul-degrade: linear-gradient(97.54deg, #002F52 35.49%, #896f32 165.37%);
     --Montserrat: "Montserrat", sans-serif;
     --Krona-One: "Krona One", sans-serif;
@@ -128,6 +134,14 @@ h1 {
     font-size: 25px; /* Ajuste o tamanho dos emojis conforme necessário */
 }
 
+.emoji-cell-img {
+    width: 25px; /* Largura da imagem */
+    height: 25px; /* Altura da imagem */
+    display: block;
+    margin: 0 auto; /* Centraliza a imagem */
+}
+
+
 .action-buttons {
     display: flex; /* Deixa os botões lado a lado */
     gap: 15px; /* Espaçamento entre os botões */
@@ -145,3 +159,13 @@ h1 {
     align-items: center; /* Centraliza o conteúdo verticalmente */
     justify-content: center; /* Centraliza o conteúdo horizontalmente */
 }
+
+/* #29166f */
+
+
+/* Color Theme Swatches in Hex */
+.Fondo-Azul-1{ color: #023E73; }
+.Fondo-Azul-2{ color: #023059; }
+.Fondo-Azul-3{ color: #03658C; }
+.Fondo-Azul-4{ color: #0388A6; }
+.Fondo-Azul-5{ color: #04ADBF; }
