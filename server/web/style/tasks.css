@@ -147,7 +147,6 @@ h1 {
     margin: 0 auto; /* Centraliza a imagem */
 }
 
-
 .action-buttons {
     display: flex; /* Deixa os botões lado a lado */
     gap: 15px; /* Espaçamento entre os botões */

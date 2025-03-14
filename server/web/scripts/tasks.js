@@ -63,7 +63,6 @@ async function fetchTasks() {
                 }
             }
             
-
             else if (index === 4) {
                 if (item === "Mecânico") {
                     if (item === "Mecânico") {
@@ -105,6 +104,7 @@ async function fetchTasks() {
 
             // cell.textContent = item;
             row.appendChild(cell);
+            row.className = "color-row";
         });
 
         // Adicionando os botões de editar e excluir
