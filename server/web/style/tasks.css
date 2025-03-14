@@ -18,12 +18,16 @@
     --cor-azul-3: #011C40 ;
     --cor-azul-4: #03588C ;
     --cor-azul-5: #049DBF ;
-    --Fondo-Azul-1: #023E73;
-    --Fondo-Azul-2: #023059;
-    --Fondo-Azul-3: #03658C;
-    --Fondo-Azul-4: #0388A6;
-    --Fondo-Azul-5: #04ADBF;
-
+    --Fundo-Azul-1: #023E73;
+    --Fundo-Azul-2: #023059;
+    --Fundo-Azul-3: #03658C;
+    --Fundo-Azul-4: #0388A6;
+    --Fundo-Azul-5: #04ADBF;
+    --cinza-1: #B8B8B8;
+    --cinza-2: #8C8C8C;
+    --cinza-3: #5E5E5E;
+    --cinza-4: #2E2E2E;
+    --cinza-5: #000000;
     --azul-degrade: linear-gradient(97.54deg, #002F52 35.49%, #896f32 165.37%);
     --Montserrat: "Montserrat", sans-serif;
     --Krona-One: "Krona One", sans-serif;
@@ -108,24 +112,26 @@ h1 {
     margin-top: 20px;
 }
 
+/* cores da tabela */
 .task-table th {
-    background-color: var(--cor-azul);
+    /* cabeçaljo */
+    background-color: var(--cinza-4);
 }
-
 .task-table tr:nth-child(even) {
-    background-color: var(--cor-azul-4);
+    /* linha impar */
+    background-color: var(--cinza-3);
 }
-
 .task-table tr:nth-child(odd) {
-    background-color: var(--cor-azul-5);
+    /* linha par */
+    background-color: var(--cinza-2);
 }
-
 .task-table tr:hover {
-    background-color: var(--cor-azul-2);
+    /* linha em seleção */
+    background-color: var(--cinza-1);
 }
-
 .task-table th, .task-table td {
-    border: 1px solid var(--cor-azul-3);
+    /* grade tabela */
+    border: 1px solid var(--cinza-5);
     padding: 10px;
     text-align: center;
 }
@@ -159,13 +165,3 @@ h1 {
     align-items: center; /* Centraliza o conteúdo verticalmente */
     justify-content: center; /* Centraliza o conteúdo horizontalmente */
 }
-
-/* #29166f */
-
-
-/* Color Theme Swatches in Hex */
-.Fondo-Azul-1{ color: #023E73; }
-.Fondo-Azul-2{ color: #023059; }
-.Fondo-Azul-3{ color: #03658C; }
-.Fondo-Azul-4{ color: #0388A6; }
-.Fondo-Azul-5{ color: #04ADBF; }
