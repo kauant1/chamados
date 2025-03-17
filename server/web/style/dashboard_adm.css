@@ -104,18 +104,21 @@ h1 {
 /* botões */
 .button_get_task, .button_reload_task,
 .button-group .logout-button {
-    width: 110px;
-    height: 70px;
+    width: 120px;
+    height: 50px;
     background-color: var(--cor-buttons); /* Cor de fundo profissional */
     color: var(--cor-branco); /* Cor do texto */
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     border: none;
-    border-radius: 8px; /* Borda arredondada */
+    border-radius: 10px; /* Borda arredondada */
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
     box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
+    display: flex; /* Define como flex container */
+    justify-content: center; /* Alinha o conteúdo horizontalmente */
+    align-items: center; /* Alinha o conteúdo verticalmente */
 }
 
 .button-group .logout-button {

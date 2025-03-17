@@ -18,6 +18,11 @@
     --cor-azul-3: #011C40 ;
     --cor-azul-4: #03588C ;
     --cor-azul-5: #049DBF ;
+    --cinza-1: #B8B8B8;
+    --cinza-2: #8C8C8C;
+    --cinza-3: #5E5E5E;
+    --cinza-4: #2E2E2E;
+    --cinza-5: #000000;
     --azul-degrade: linear-gradient(97.54deg, #002F52 35.49%, #896f32 165.37%);
     --Montserrat: "Montserrat", sans-serif;
     --Krona-One: "Krona One", sans-serif;
@@ -27,7 +32,7 @@
 }
 
 .header_section03 {
-    width: 131%; /* Garante que o header ocupe toda a largura da página */
+    width: 100%; /* Garante que o header ocupe toda a largura da página */
     background: linear-gradient(90deg,var(--cor-azul-4) 0%, var(--cor-azul-3) 100%);
     position: relative; /* Garante que ele se posicione adequadamente */
     margin: 0; /* Remove margens extras */
@@ -68,14 +73,50 @@ body{
     text-align: center;
     height: 100px;
     width: 300px;
+    background-color: var(--cor-buttons); /* Cor de fundo */
+    border: 2px solid #ccc; /* Borda */
+    border-radius: 8px; /* Bordas arredondadas */
+    font-size: 16px; /* Tamanho da fonte */
+    color: var(--cor-branco); /* Cor do texto */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+    transition: all 0.3s ease; /* Transição para efeitos */
+}
+
+.body_section_escolha2_input:hover {
+    border-color: #888; /* Cor da borda ao passar o mouse */
+    background-color: var(--cor-azul-2);
+    color: var(--cor-branco); /* Fundo ao passar o mouse */
+}
+
+/* Estilo ao focar no campo */
+.body_section_escolha2_input:focus {
+    border-color: #007BFF; /* Borda azul ao focar */
+    outline: none; /* Remove o contorno padrão */
+    background-color: #fff; /* Fundo branco ao focar */
+    color: var(--cor-preto);
 }
 
 .body_section_escolha1_select2, .body_section_escolha1_select1 {
-    width: 170px;
-    height: 30px;
+    width: 190px;
+    height: 40px;
+    background-color: var(--cor-buttons);
+    color: var(--cor-branco);
+    border: 1px solid var(--cor-branco); /* Cor da borda */
+    padding: 10px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho do texto */
+    border-radius: 4px; /* Arredondamento da borda */
 }
-    
-.body_section_escolha1_select1, .body_section_escolha1_select2, .body_section_escolha3,option{
+
+.body_section_escolha3{
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    gap: 70px;
+    padding: 10px;
+}
+
+
+.body_section_escolha1_select1 option, .body_section_escolha1_select2 option, .body_section_escolha3 option{
     text-align: center;
 }
 
@@ -123,14 +164,15 @@ body{
 .button-group .back-button,
 .body_section_escolha3 .body_section_escolha3_button_1,
 .body_section_escolha3 .body_section_escolha3_button_2 {
-    width: 100px;
-    height: 40px;
+    width: 120px;
+    height: 50px;
     background-color: var(--cor-buttons); /* Cor de fundo profissional */
     color: var(--cor-branco); /* Cor do texto */
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     border: none;
-    border-radius: 8px; /* Borda arredondada */
+    border-radius: 10px; /* Borda arredondada */
+    padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
     box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
@@ -144,10 +186,10 @@ body{
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte no hover */
 }
 
-.button-group .logout-button,
-.button-group .back-button,
-.body_section_escolha3 .body_section_escolha3_button_1,
-.body_section_escolha3 .body_section_escolha3_button_2 {
+.button-group .logout-button:active,
+.button-group .back-button:active,
+.body_section_escolha3 .body_section_escolha3_button_1:active,
+.body_section_escolha3 .body_section_escolha3_button_2:active {
     transform: scale(0.95); /* Efeito de clique */
     background-color: var(--cor-azul-4); /* Cor ao pressionar */
 }

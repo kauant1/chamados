@@ -33,23 +33,16 @@
     margin: 30px;
 }
 
-.header_section02{
+/* .header_section02{
     font-size: 12px;
-}
+} */
 
 .header_section03 {
-    width: 131%; /* Garante que o header ocupe toda a largura da página */
+    width: 100%;
     background: linear-gradient(90deg,var(--cor-azul-4) 0%, var(--cor-azul-3) 100%);
-    position: relative; /* Garante que ele se posicione adequadamente */
-    margin: 0; /* Remove margens extras */
-    padding: 1px; /* Adiciona espaço interno */
-}
-
-.button-group {
-    padding: 15px 7px;
-    display: flex;
-    gap: 10px; /* Espaçamento entre os botões */
-    flex-direction:row; /* Empilha os botões no celular */
+    position: relative;
+    margin: 0;
+    padding: 1px;
 }
 
 body{
@@ -58,14 +51,6 @@ body{
     font-family: var(--Krona-One);
     font-size: 16px;
     font-weight: 400;
-}
-
-.Name {
-    text-transform: capitalize;
-}
-
-h1 {
-    text-align: center;
 }
 
 /* Index */
@@ -96,15 +81,17 @@ h1 {
     height: 40px;
     background-color: var(--cor-buttons); /* Cor de fundo profissional */
     color: var(--cor-branco); /* Cor do texto */
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    text-align: center;
     border: none;
     border-radius: 10px; /* Borda arredondada */
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
     box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
+    display: flex; /* Define como flex container */
+    justify-content: center; /* Alinha o conteúdo horizontalmente */
+    align-items: center; /* Alinha o conteúdo verticalmente */
 }
 
 .body_section_2_send .button_register:hover,
@@ -121,10 +108,11 @@ h1 {
 
 .input_login{
     font-weight: bold;
+    font-size-adjust: 1;
     text-align: center;
     border: none;
-    border-radius: 10px; /* Borda arredondada */
-    width: 200px;
-    height: 25px;
+    border-radius: 9px;
+    width: 230px;
+    height: 40px;
     margin-top: 10px;
 }
