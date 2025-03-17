@@ -164,3 +164,7 @@ h1 {
     align-items: center; /* Centraliza o conteúdo verticalmente */
     justify-content: center; /* Centraliza o conteúdo horizontalmente */
 }
+
+.action-buttons button:hover {
+    background-color: var(--cor-buttons);
+}
