@@ -48,7 +48,7 @@
 }
 
 .header_section03 {
-    width: 131%; /* Garante que o header ocupe toda a largura da página */
+    width: 100%; /* Garante que o header ocupe toda a largura da página */
     background: linear-gradient(90deg,var(--cor-azul-4) 0%, var(--cor-azul-3) 100%);
     position: relative; /* Garante que ele se posicione adequadamente */
     margin: 0; /* Remove margens extras */
@@ -79,31 +79,31 @@ h1 {
 }
 
 .button-group .logout-button,
-.button-group .back-button,
-.button_get_task,
-.body_section_2_send .button_send,
-.body_section_2_send .button_register {
-    padding: 5px 7px;
-    background-color: var(--cor-azul-4); /* Cor de fundo */
+.button-group .back-button {
+    width: 120px;
+    height: 50px;
+    background-color: var(--cor-buttons); /* Cor de fundo profissional */
     color: var(--cor-branco); /* Cor do texto */
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px; /* Borda arredondada */
+    padding: 10px 20px;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra do botão */
-    transition: background-color 0.3s, box-shadow 0.3s; /* Animação ao passar o mouse */
-    width: 100px;
-    height: 40px;
+    transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
+    box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
 }
 
 .button-group .logout-button:hover,
-.button-group .back-button:hover,
-.button_get_task:hover,
-.body_section_2_send .button_send:hover,
-.body_section_2_send .button_register:hover {
+.button-group .back-button:hover {
     background-color: var(--cor-azul-3); /* Cor no hover */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte no hover */
+}
+
+.button-group .logout-button:active,
+.button-group .back-button:active {
+    transform: scale(0.95); /* Efeito de clique */
+    background-color: var(--cor-azul-4); /* Cor ao pressionar */
 }
 
 .task-table {

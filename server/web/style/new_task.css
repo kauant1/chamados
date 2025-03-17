@@ -80,6 +80,7 @@ body{
     color: var(--cor-branco); /* Cor do texto */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
     transition: all 0.3s ease; /* Transição para efeitos */
+    margin-top: 10px;
 }
 
 .body_section_escolha2_input:hover {
@@ -88,7 +89,6 @@ body{
     color: var(--cor-branco); /* Fundo ao passar o mouse */
 }
 
-/* Estilo ao focar no campo */
 .body_section_escolha2_input:focus {
     border-color: #007BFF; /* Borda azul ao focar */
     outline: none; /* Remove o contorno padrão */
@@ -103,6 +103,8 @@ body{
     color: var(--cor-branco);
     border: 1px solid var(--cor-branco); /* Cor da borda */
     padding: 10px; /* Espaçamento interno */
+    margin-top: 10px;
+    margin-bottom: 20px;
     font-size: 16px; /* Tamanho do texto */
     border-radius: 4px; /* Arredondamento da borda */
 }
@@ -114,7 +116,6 @@ body{
     gap: 70px;
     padding: 10px;
 }
-
 
 .body_section_escolha1_select1 option, .body_section_escolha1_select2 option, .body_section_escolha3 option{
     text-align: center;
@@ -179,17 +180,13 @@ body{
 }
 
 .button-group .logout-button:hover,
-.button-group .back-button:hover,
-.body_section_escolha3 .body_section_escolha3_button_1:hover,
-.body_section_escolha3 .body_section_escolha3_button_2:hover {
+.button-group .back-button:hover {
     background-color: var(--cor-azul-3); /* Cor no hover */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte no hover */
 }
 
 .button-group .logout-button:active,
-.button-group .back-button:active,
-.body_section_escolha3 .body_section_escolha3_button_1:active,
-.body_section_escolha3 .body_section_escolha3_button_2:active {
+.button-group .back-button:active {
     transform: scale(0.95); /* Efeito de clique */
     background-color: var(--cor-azul-4); /* Cor ao pressionar */
 }
