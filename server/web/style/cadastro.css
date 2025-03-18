@@ -35,7 +35,7 @@ body{
 }
 
 .header_section03 {
-    width: 131%; /* Garante que o header ocupe toda a largura da página */
+    width: 100%; /* Garante que o header ocupe toda a largura da página */
     background: linear-gradient(90deg,var(--cor-azul-4) 0%, var(--cor-azul-3) 100%);
     position: relative; /* Garante que ele se posicione adequadamente */
     margin: 0; /* Remove margens extras */
