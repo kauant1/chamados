@@ -18,6 +18,16 @@
     --cor-azul-3: #011C40 ;
     --cor-azul-4: #03588C ;
     --cor-azul-5: #049DBF ;
+    --Fundo-Azul-1: #023E73;
+    --Fundo-Azul-2: #023059;
+    --Fundo-Azul-3: #03658C;
+    --Fundo-Azul-4: #0388A6;
+    --Fundo-Azul-5: #04ADBF;
+    --cinza-1: #B8B8B8;
+    --cinza-2: #8C8C8C;
+    --cinza-3: #5E5E5E;
+    --cinza-4: #2E2E2E;
+    --cinza-5: #000000;
     --azul-degrade: linear-gradient(97.54deg, #002F52 35.49%, #896f32 165.37%);
     --Montserrat: "Montserrat", sans-serif;
     --Krona-One: "Krona One", sans-serif;
@@ -45,13 +55,6 @@
     padding: 1px; /* Adiciona espaço interno */
 }
 
-.button-group {
-    padding: 15px 7px;
-    display: flex;
-    gap: 10px; /* Espaçamento entre os botões */
-    flex-direction:row; /* Empilha os botões no celular */
-}
-
 body{
     background-color: var(--cor-preto);
     color: var(--cor-branco);
@@ -63,3 +66,54 @@ body{
 .Name {
     text-transform: capitalize;
 }
+
+h1 {
+    text-align: center;
+}
+
+.button-group {
+    padding: 15px 7px;
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+    flex-direction:row; /* Empilha os botões no celular */
+}
+
+.button-group .logout-button,
+.button-group .back-button,
+.button_reload_task,
+.button_get_task {
+    width: 120px;
+    height: 50px;
+    background-color: var(--cor-buttons); /* Cor de fundo profissional */
+    color: var(--cor-branco); /* Cor do texto */
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px; /* Borda arredondada */
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
+    box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
+    display: flex; /* Define como flex container */
+    justify-content: center; /* Alinha o conteúdo horizontalmente */
+    align-items: center; /* Alinha o conteúdo verticalmente */
+}
+
+.button-group .logout-button:hover,
+.button-group .backbutton:hover,
+.button-group .logout-button:hover,
+.button-group .back-button:hover,
+.button_get_task:hover{
+    background-color: var(--cor-azul-3); /* Alteração de cor no hover */
+    transform: scale(1.05); /* Pequeno efeito de aumento no hover */
+}
+
+.button_reload_task:active,
+.button_get_task:active,
+.button-group .logout-button:active,
+.button-group .backbutton-:active,
+.back-button:hover {
+    transform: scale(0.95); /* Efeito de clique */
+    background-color: var(--cor-azul-4); /* Cor ao pressionar */
+}
+

@@ -16,8 +16,8 @@ if (office === 'Superior') {
     const button_viewalltask = document.createElement('button')
     console.log(office);
     
-    createButton(button_newTask, 'Nova tarefa', '8px')
-    createButton(button_viewalltask, 'Ver todos Chamados', '8px')
+    createButton(button_newTask, 'Nova Tarefa', '8px')
+    createButton(button_viewalltask, 'Ver Chamados', '8px')
 
     button_newTask.addEventListener ('click', () => {
         window.location.href = '/new_task?username=' + nome + '&office=' + office;
@@ -30,9 +30,9 @@ if (office === 'Superior') {
     const button_reload = document.createElement('button')
     const button_query_task = document.createElement('button')
     const view_my_tasks = document.createElement('button')
-    createButton(button_reload, 'Ver todas', '8px')
-    createButton(button_query_task, 'Minhas tarefas', '4px')
-    createButton(view_my_tasks, 'Tarefas finalizadas', '4px')
+    createButton(button_reload, 'Ver Todas', '8px')
+    createButton(button_query_task, 'Minhas Tarefas', '4px')
+    createButton(view_my_tasks, 'Tarefas Finalizadas', '4px')
 
     async function getChamados() {
         const nome = document.querySelector('.Name').textContent;
@@ -126,7 +126,7 @@ if (office === 'Superior') {
 
     function editButton(button, id, text) {
         button.textContent = `${text} ${id}`;
-        button.classList.add('button_get_task');
+        button.classList.add('button-group');
         button.style.marginTop = '10px';
         return button;
     };

@@ -1,59 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alata&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Krona+One&family=Montserrat:ital,wght@0,600;1,600&family=Share+Tech+Mono&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
-
-*{
-    margin: 0;
-    padding: 0;
-}
-
-:root{
-    --cor-branco: #FFFFFF;
-    --cor-cinza: #C0C0C0;
-    --cor-vermelho: #ff0000;
-    --cor-buttons: #0056b3;
-    --cor-azul: #167bf7;
-    --cor-preto: #00030C;
-    --cor-azul-1: #010D26 ;
-    --cor-azul-2: #022859 ;
-    --cor-azul-3: #011C40 ;
-    --cor-azul-4: #03588C ;
-    --cor-azul-5: #049DBF ;
-    --azul-degrade: linear-gradient(97.54deg, #002F52 35.49%, #896f32 165.37%);
-    --Montserrat: "Montserrat", sans-serif;
-    --Krona-One: "Krona One", sans-serif;
-    --Alata: "Alata", sans-serif;
-    --Share-Tech-Mono: "Share Tech Mono", monospace;
-    --Kanit: "Kanit", sans-serif;
-}
-
-body{
-    background-color: var(--cor-preto);
-    color: var(--cor-branco);
-    font-family: var(--Krona-One);
-    font-size: 16px;
-    font-weight: 400;
-}
-
-.header_section03 {
-    width: 100%; /* Garante que o header ocupe toda a largura da página */
-    background: linear-gradient(90deg,var(--cor-azul-4) 0%, var(--cor-azul-3) 100%);
-    position: relative; /* Garante que ele se posicione adequadamente */
-    margin: 0; /* Remove margens extras */
-    padding: 1px; /* Adiciona espaço interno */
-}
-
-.header_section02 {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    margin: 30px;
-
-}
-
-h1{
-    text-align: center;
-    font-size: 30px;
-}
+@import url(header.css);
 
 #username, #password, #confirm_password{
     font-weight: bold;
@@ -81,25 +26,23 @@ h1{
     flex-wrap: nowrap;
 }
 
-.button-group {
-    padding: 15px 7px;
-}
-
 .button-group .back-button,
 .form_cadastro .button_register {
     width: 100px;
     height: 40px;
     background-color: var(--cor-buttons); /* Cor de fundo profissional */
     color: var(--cor-branco); /* Cor do texto */
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    text-align: center;
     border: none;
     border-radius: 10px; /* Borda arredondada */
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease-in-out; /* Animação ao passar o mouse */
     box-shadow: 0 1px 8px var(--cor-cinza); /* Sombra para profundidade */
+    display: flex; /* Define como flex container */
+    justify-content: center; /* Alinha o conteúdo horizontalmente */
+    align-items: center; /* Alinha o conteúdo verticalmente */
 }
 
 .button-group .back-button:hover,
