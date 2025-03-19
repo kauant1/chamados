@@ -2,10 +2,16 @@ from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, Redirect
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.templating import Jinja2Templates
+from datetime import datetime, timedelta
 from pydantic import BaseModel  
-import datetime
+from jose import JWTError, jwt
 import uvicorn
 import sqlite3
+
+# Chave secreta para o JWT
+CHAVE_SECRETA = "chaveSuperSecreta"
+ALGORITMO = "HS256"
+TEMPO_EXPIRACAO_MINUTOS = 30
 
 app = FastAPI()
 templates = Jinja2Templates(directory="server/web/")
@@ -51,6 +57,12 @@ def calculate_service_duration(inicio, termino):
     segundos = duracao.seconds % 60
     return f"{horas}:{minutos}:{segundos}"
 
+def criar_token_acesso(dados: dict, expira_delta: timedelta = None):
+    dados_para_codificar = dados.copy()
+    expira = datetime.now() + (expira_delta or timedelta(minutes=15))
+    dados_para_codificar.update({"exp": expira})
+    return jwt.encode(dados_para_codificar, CHAVE_SECRETA, algorithm=ALGORITMO)
+
 @app.get("/")
 async def index():
     return FileResponse("server/web/index.html")
@@ -65,10 +77,12 @@ async def login(request: Request, login:User):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM usuarios WHERE username=? AND password=?', (login.username, login.password))
     user = cursor.fetchone()
+    cursor.close()
     if user:
         area = user[3]
         if area == 'Mecânico': 
-            return {"username": user[1], "office": user[3]}
+            token_acesso = criar_token_acesso(dados={"sub": user[1]})
+            return {"username": user[1], "office": user[3], "access_token": token_acesso, "token_type": "bearer"}
         elif area == 'Elétrico':
             return {"username": user[1], "office": user[3]}
         elif area == 'T.I.':
@@ -259,6 +273,34 @@ async def get_script(file_name: str):
 @app.get("/favicon.ico", include_in_schema=False)
 def favicon():
     return FileResponse("server/web/static/favicon.ico")
+
+
+
+
+# Rota protegida que exige um token válido
+@app.get("/rota-protegida")
+async def rota_protegida(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, CHAVE_SECRETA, algorithms=[ALGORITMO])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Token inválido")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    return {"mensagem": "Você tem acesso a essa rota!"}
+
+# Middleware para limitar a taxa de requisições (rate limiting)
+# @app.middleware("http")
+# async def limitador_de_taxa(request: Request, call_next):
+#     # Exemplo simples: limitar requisições por IP em um intervalo de tempo
+#     ip = request.client.host
+#     horario_atual = datetime.utcnow()
+#     # Aqui você pode integrar um rastreamento mais robusto usando Redis ou outro banco de dados
+#     resposta = await call_next(request)
+#     return resposta
+
+
+
 
 if "__main__" == __name__:
         uvicorn.run(
