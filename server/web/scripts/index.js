@@ -35,15 +35,59 @@ async function handleLogin() {
 
     if (response.headers.get('Content-Type') === 'application/json') {
         const user = await response.json();
-        window.location.href = '/dashboard?username=' + user.username + '&office=' + user.office;
+        console.log("Dados protegidos:", user);
+        localStorage.setItem('token', user.access_token);
+        // window.location.href = '/dashboard?username=' + user.username + '&office=' + user.office;
+        window.location.href = `/dashboard?username=${user.username}&office=${user.office}`;
+        // window.location.href = `/dashboard?username=${user.username}&office=${user.office}&token=${localStorage.getItem('token')}`;
     } else if (response.headers.get('Content-Type') === 'text/html') {
         response.text().then(data => {document.body.innerHTML = data; });
     } else {
         response.text().then(data => {document.body.innerHTML = data; });
     }
 }
+const user = {
+    username: username.value,
+    password: password.value
+};
+async function acessarDashboard(user) {
+    const token = localStorage.getItem('token'); // Recuperar o token armazenado no localStorage
 
-button_send.addEventListener('click', handleLogin);
+    if (!token) {
+        alert("Token não encontrado. Faça login novamente.");
+        window.location.href = '/login';
+        return;
+    }
+
+    // Fazer requisição à rota protegida com o token no cabeçalho
+    const response = await fetch('/dashboard', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Token no cabeçalho
+            'Content-Type': 'application/json',
+            'username': username.value,
+            'password': password.value
+        }
+    });
+
+    if (response.status === 401) {
+        alert("Token inválido ou sessão expirada. Faça login novamente.");
+        window.location.href = '/login';
+        return;
+    }
+
+    if (response.headers.get('Content-Type') === 'text/html') {
+        const html = await response.text();
+        // Substituir o conteúdo do corpo da página com a resposta do servidor
+        document.body.innerHTML = html;
+    } else {
+        alert("Erro ao carregar a página.");
+        console.error(await response.text());
+    }
+}
+
+
+button_send.addEventListener('click', acessarDashboard);
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {

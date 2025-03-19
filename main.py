@@ -3,6 +3,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBear
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.templating import Jinja2Templates
 from datetime import datetime, timedelta
+from passlib.context import CryptContext
 from pydantic import BaseModel  
 from jose import JWTError, jwt
 import uvicorn
@@ -15,6 +16,7 @@ TEMPO_EXPIRACAO_MINUTOS = 30
 
 app = FastAPI()
 templates = Jinja2Templates(directory="server/web/")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 class User(BaseModel):
@@ -33,6 +35,19 @@ class New_Tasks(BaseModel):
     Problema: str
     Username: str
     Office: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class UserInDB(User):
+    hashed_password: str
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
 
 def get_current_time():
     current_time_utc = datetime.datetime.utcnow()
@@ -63,6 +78,16 @@ def criar_token_acesso(dados: dict, expira_delta: timedelta = None):
     dados_para_codificar.update({"exp": expira})
     return jwt.encode(dados_para_codificar, CHAVE_SECRETA, algorithm=ALGORITMO)
 
+def validar_token(token: str):
+    try:
+        payload = jwt.decode(token, CHAVE_SECRETA, algorithms=[ALGORITMO])
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Token inválido")
+        return username
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    
 @app.get("/")
 async def index():
     return FileResponse("server/web/index.html")
@@ -75,33 +100,67 @@ async def index():
 async def login(request: Request, login:User):
     conn = sqlite3.connect('server/database.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM usuarios WHERE username=? AND password=?', (login.username, login.password))
+    cursor.execute('SELECT username, password, profissional FROM usuarios WHERE username=?', (login.username,))
     user = cursor.fetchone()
     cursor.close()
-    if user:
-        area = user[3]
-        if area == 'Mecânico': 
-            token_acesso = criar_token_acesso(dados={"sub": user[1]})
-            return {"username": user[1], "office": user[3], "access_token": token_acesso, "token_type": "bearer"}
-        elif area == 'Elétrico':
-            return {"username": user[1], "office": user[3]}
-        elif area == 'T.I.':
-            return {"username": user[1], "office": user[3]}
-        elif area == 'Superior':
-            return {"username": user[1], "office": user[3]}
-            # return templates.TemplateResponse("dashboard.html", context={"request": request, "username": login.username}, status_code = 200)
-            # return RedirectResponse(url="/", status_code=302)
-            # return FileResponse("server/web/abrir_tarefa.html")
+    conn.close()
+    # cursor.execute('SELECT * FROM usuarios WHERE username=? AND password=?', (login.username,  login.password))
+    # user = cursor.fetchone()
+    # cursor.close()
+    # conn.close()
+    if not user:
+        raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
+    
+    stored_hash = user[1]  # Hash armazenado no banco
+    if not verify_password(login.password, stored_hash):
+        raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
+    
+    token_acesso = criar_token_acesso(dados={"sub": user[1]})
+    token = {"access_token": token_acesso, "token_type": "bearer"}
+    
+    if user[2]:
+        return {"username": user[0], "office": user[2], "access_token": token_acesso, "token_type": "bearer"}
     else:
         return HTTPException(status_code=401, detail="Usuário ou senha inválidos")
 
+
+
 @app.get("/dashboard")
-async def dashboard(request: Request, username: str = None, office: str = None):
-    if not username or username == "undefined":
-        return RedirectResponse(url="/")
+# async def dashboard(request: Request, username: str = None, office: str = None, token: str = None):
+async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Token não fornecido")
+    
+    username_from_token = validar_token(token)
+    if not username_from_token or username_from_token != username:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
     if office == 'Superior':
-        return templates.TemplateResponse("dashboard_adm.html", context={"request": request, "username": username, "office": office}, status_code = 200)
-    else: return templates.TemplateResponse("dashboard.html", context={"request": request, "username": username, "office": office}, status_code = 200)
+        return templates.TemplateResponse(
+            "dashboard_adm.html", 
+            context={"request": request, "username": username, "office": office}, 
+            status_code=200
+        )
+    else:
+        return templates.TemplateResponse(
+            "dashboard.html", 
+            context={"request": request, "username": username, "office": office}, 
+            status_code=200
+        )
+
+
+
+
+
+
+# @app.get("/dashboard")
+# async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
+#     username = validar_token(token)
+#     if not username or username == "undefined":
+#         return RedirectResponse(url="/")
+#     if office == 'Superior':
+#         return templates.TemplateResponse("dashboard_adm.html", context={"request": request, "username": username, "office": office}, status_code = 200)
+#     else: return templates.TemplateResponse("dashboard.html", context={"request": request, "username": username, "office": office}, status_code = 200)
 
 @app.get("/cadastro")
 async def login():
@@ -113,9 +172,16 @@ async def create_user(request:Request, user:NewUser):
     cursor = conn.cursor()
     if user.password != user.confirm_password:
         raise HTTPException(status_code=400, detail="As senhas não são iguais")
-    # Criar um novo usuário
-    cursor.execute('INSERT INTO usuarios (username, password, profissional) VALUES (?, ?, ?)', (user.username, user.password, user.profissional))
+    hashed_password = hash_password(user.password)
+    try:
+        cursor.execute('INSERT INTO usuarios (username, password, profissional) VALUES (?, ?, ?)', (user.username, hashed_password, user.profissional))
+    except:
+        cursor.close()
+        conn.close()
+        return {"message": "Erro!"}
     conn.commit()
+    cursor.close()
+    conn.close()
     return {"message": "Usuário criado com sucesso!"}
 
 @app.get("/usuarios")
@@ -132,6 +198,8 @@ async def update_user(username: str, password: str):
     cursor = conn.cursor()
     cursor.execute('UPDATE usuarios SET password=? WHERE username=?', (password, username))
     conn.commit()
+    cursor.close()
+    conn.close()
     return {"message": "Usuário atualizado com sucesso!"}
 
 @app.delete("/usuarios/{username}")
@@ -140,6 +208,8 @@ async def delete_user(username: str):
     cursor = conn.cursor()
     cursor.execute('DELETE FROM usuarios WHERE username=?', (username,))
     conn.commit()
+    cursor.close()
+    conn.close()
     return {"message": "Usuário deletado com sucesso!"}
 
 @app.get("/chamados")
@@ -176,6 +246,8 @@ async def new_task(dados:New_Tasks):
             VALUES (?, ?, ?, ?, ?)
         ''', dados_tarefa)
         conn.commit()
+        cursor.close()
+        conn.close()
         return {'message':'Tarefa cadastrada com sucesso!'}
     else: return {'erro':'Erro ao cadastrar a tarefa'}
 
@@ -190,6 +262,8 @@ async def det_task(dados:dict):
     else:
         cursor.execute("UPDATE tarefas SET profissional = ?, inicio = ? WHERE id = ?", (dados['user'], get_current_time(), dados['id']))
         conn.commit()
+        cursor.close()
+        conn.close()
         return {'message' : "Tarefa adicionada ao seu Dashboard"}
 
 @app.get("/get-task")
@@ -203,6 +277,7 @@ async def get_task(request:Request, user: str):
         return {"erro": "Sem Tarefas"}
     else:
         conn.commit()
+        cursor.close()
         conn.close()
         return {'data': registro}
 
@@ -218,6 +293,8 @@ async def end_task(request: Request, data:dict):
             termino = get_current_time()
             cursor.execute("UPDATE tarefas SET finalizada = ?, termino = ?, duracao = ? WHERE id = ?",('true', termino, calculate_service_duration(inicio, termino),data['id']))
             conn.commit()
+            cursor.close()
+            conn.close()
             return {'message': 'Tarefa finalizada com sucesso!'}
         else:
             return  {'message': 'erro!'}
@@ -236,6 +313,7 @@ async def get_task_data():
     cursor.execute("SELECT * FROM tarefas")
     registro = cursor.fetchall()
     conn.commit()
+    cursor.close()
     conn.close()
     return {"tasks": registro}
 
