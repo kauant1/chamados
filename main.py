@@ -70,34 +70,21 @@ def calculate_service_duration(inicio, termino):
     segundos = duracao.seconds % 60
     return f"{horas}:{minutos}:{segundos}"
 
-# def criar_token_acesso(dados: dict, expira_delta: timedelta = None):
-#     dados_para_codificar = dados.copy()
-#     # expira = datetime.utcnow() + (expira_delta or timedelta(minutes=15))
-#     expira = datetime.now() + timedelta(hours=1)
-#     dados_para_codificar.update({"exp": expira})
-#     return jwt.encode(dados_para_codificar, chavetoken, algorithm=algoritmo)
-
 def criar_token_acesso(dados: dict):
-    print(dados)
     payload = {
         "sub": dados['sub'],
         "exp": datetime.utcnow() + timedelta(minutes=10)
     }   
     token = jwt.encode(payload, CHAVE_SECRETA, algorithm=ALGORITMO)
-    print("Token gerado:", token)
     return token
 
 def validar_token(token: str):
     try:
         decoded_payload = jwt.decode(token, CHAVE_SECRETA, algorithms=[ALGORITMO])
-        print("Payload decodificado:", decoded_payload)
-        
-        # Verificar se o campo "sub" existe
         username = decoded_payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Token inválido")
         
-        # Verificar manualmente a expiração (opcional, já é feita pelo decode)
         exp = decoded_payload.get("exp")
         if exp and datetime.fromtimestamp(exp, tz=timezone.utc) < datetime.now(tz=timezone.utc):
             raise HTTPException(status_code=401, detail="Token expirado")
@@ -122,10 +109,6 @@ async def login(request: Request, login:User):
     user = cursor.fetchone()
     cursor.close()
     conn.close()
-    # cursor.execute('SELECT * FROM usuarios WHERE username=? AND password=?', (login.username,  login.password))
-    # user = cursor.fetchone()
-    # cursor.close()
-    # conn.close()
     if not user:
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
     
@@ -141,8 +124,6 @@ async def login(request: Request, login:User):
     else:
         return HTTPException(status_code=401, detail="Usuário ou senha inválidos")
 
-
-
 @app.get("/dashboard")
 async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
     username = request.query_params.get('username')
@@ -157,54 +138,9 @@ async def dashboard(request: Request, username: str = None, office: str = None, 
     
     # Renderização condicional com base no cargo (office)
     if office == 'Superior':
-        return templates.TemplateResponse(
-            "dashboard_adm.html",
-            {"request": request, "username": username, "office": office}
-        )
+        return templates.TemplateResponse("dashboard_adm.html", context={"request": request, "username": username, "office": office}, status_code = 200)
     else:
-        return templates.TemplateResponse(
-            "dashboard.html",
-            {"request": request, "username": username, "office": office}
-        )
-
-
-
-# @app.get("/dashboard")
-# # async def dashboard(request: Request, username: str = None, office: str = None, token: str = None):
-# async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
-#     if not token:
-#         raise HTTPException(status_code=401, detail="Token não fornecido")
-    
-#     username_from_token = validar_token(token)
-#     if not username_from_token or username_from_token != username:
-#         raise HTTPException(status_code=401, detail="Token inválido")
-
-#     if office == 'Superior':
-#         return templates.TemplateResponse(
-#             "dashboard_adm.html", 
-#             context={"request": request, "username": username, "office": office}, 
-#             status_code=200
-#         )
-#     else:
-#         return templates.TemplateResponse(
-#             "dashboard.html", 
-#             context={"request": request, "username": username, "office": office}, 
-#             status_code=200
-#         )
-
-
-
-
-
-
-# @app.get("/dashboard")
-# async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
-#     username = validar_token(token)
-#     if not username or username == "undefined":
-#         return RedirectResponse(url="/")
-#     if office == 'Superior':
-#         return templates.TemplateResponse("dashboard_adm.html", context={"request": request, "username": username, "office": office}, status_code = 200)
-#     else: return templates.TemplateResponse("dashboard.html", context={"request": request, "username": username, "office": office}, status_code = 200)
+        return templates.TemplateResponse("dashboard.html", context={"request": request, "username": username, "office": office}, status_code = 200)
 
 @app.get("/cadastro")
 async def login():
@@ -396,33 +332,15 @@ async def get_script(file_name: str):
 def favicon():
     return FileResponse("server/web/static/favicon.ico")
 
-
-
-
-# Rota protegida que exige um token válido
-@app.get("/rota-protegida")
-async def rota_protegida(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, CHAVE_SECRETA, algorithms=[ALGORITMO])
-        username: str = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Token inválido")
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Token inválido")
-    return {"mensagem": "Você tem acesso a essa rota!"}
-
 # Middleware para limitar a taxa de requisições (rate limiting)
-# @app.middleware("http")
-# async def limitador_de_taxa(request: Request, call_next):
-#     # Exemplo simples: limitar requisições por IP em um intervalo de tempo
-#     ip = request.client.host
-#     horario_atual = datetime.utcnow()
-#     # Aqui você pode integrar um rastreamento mais robusto usando Redis ou outro banco de dados
-#     resposta = await call_next(request)
-#     return resposta
-
-
-
+@app.middleware("http")
+async def limitador_de_taxa(request: Request, call_next):
+    # Exemplo simples: limitar requisições por IP em um intervalo de tempo
+    ip = request.client.host
+    horario_atual = datetime.utcnow()
+    # Aqui você pode integrar um rastreamento mais robusto usando Redis ou outro banco de dados
+    resposta = await call_next(request)
+    return resposta
 
 if "__main__" == __name__:
         uvicorn.run(
