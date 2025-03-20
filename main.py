@@ -2,17 +2,15 @@ from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, Redirect
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.templating import Jinja2Templates
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from pydantic import BaseModel  
 from jose import JWTError, jwt
 import uvicorn
 import sqlite3
 
-# Chave secreta para o JWT
-CHAVE_SECRETA = "chaveSuperSecreta"
+CHAVE_SECRETA = "minha_chave_teste"
 ALGORITMO = "HS256"
-TEMPO_EXPIRACAO_MINUTOS = 30
 
 app = FastAPI()
 templates = Jinja2Templates(directory="server/web/")
@@ -72,21 +70,41 @@ def calculate_service_duration(inicio, termino):
     segundos = duracao.seconds % 60
     return f"{horas}:{minutos}:{segundos}"
 
-def criar_token_acesso(dados: dict, expira_delta: timedelta = None):
-    dados_para_codificar = dados.copy()
-    expira = datetime.now() + (expira_delta or timedelta(minutes=15))
-    dados_para_codificar.update({"exp": expira})
-    return jwt.encode(dados_para_codificar, CHAVE_SECRETA, algorithm=ALGORITMO)
+# def criar_token_acesso(dados: dict, expira_delta: timedelta = None):
+#     dados_para_codificar = dados.copy()
+#     # expira = datetime.utcnow() + (expira_delta or timedelta(minutes=15))
+#     expira = datetime.now() + timedelta(hours=1)
+#     dados_para_codificar.update({"exp": expira})
+#     return jwt.encode(dados_para_codificar, chavetoken, algorithm=algoritmo)
+
+def criar_token_acesso(dados: dict):
+    print(dados)
+    payload = {
+        "sub": dados['sub'],
+        "exp": datetime.utcnow() + timedelta(minutes=10)
+    }   
+    token = jwt.encode(payload, CHAVE_SECRETA, algorithm=ALGORITMO)
+    print("Token gerado:", token)
+    return token
 
 def validar_token(token: str):
     try:
-        payload = jwt.decode(token, CHAVE_SECRETA, algorithms=[ALGORITMO])
-        username = payload.get("sub")
+        decoded_payload = jwt.decode(token, CHAVE_SECRETA, algorithms=[ALGORITMO])
+        print("Payload decodificado:", decoded_payload)
+        
+        # Verificar se o campo "sub" existe
+        username = decoded_payload.get("sub")
         if username is None:
             raise HTTPException(status_code=401, detail="Token inválido")
+        
+        # Verificar manualmente a expiração (opcional, já é feita pelo decode)
+        exp = decoded_payload.get("exp")
+        if exp and datetime.fromtimestamp(exp, tz=timezone.utc) < datetime.now(tz=timezone.utc):
+            raise HTTPException(status_code=401, detail="Token expirado")
+        
         return username
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Token inválido")
+    except JWTError as e:
+        raise HTTPException(status_code=401, detail=f"Token inválido ou expirado: {str(e)}")
     
 @app.get("/")
 async def index():
@@ -115,7 +133,7 @@ async def login(request: Request, login:User):
     if not verify_password(login.password, stored_hash):
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
     
-    token_acesso = criar_token_acesso(dados={"sub": user[1]})
+    token_acesso = criar_token_acesso(dados={"sub": user[0]})
     token = {"access_token": token_acesso, "token_type": "bearer"}
     
     if user[2]:
@@ -126,27 +144,53 @@ async def login(request: Request, login:User):
 
 
 @app.get("/dashboard")
-# async def dashboard(request: Request, username: str = None, office: str = None, token: str = None):
 async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
+    username = request.query_params.get('username')
+    office = request.query_params.get('office')
+    
     if not token:
         raise HTTPException(status_code=401, detail="Token não fornecido")
     
     username_from_token = validar_token(token)
     if not username_from_token or username_from_token != username:
         raise HTTPException(status_code=401, detail="Token inválido")
-
+    
+    # Renderização condicional com base no cargo (office)
     if office == 'Superior':
         return templates.TemplateResponse(
-            "dashboard_adm.html", 
-            context={"request": request, "username": username, "office": office}, 
-            status_code=200
+            "dashboard_adm.html",
+            {"request": request, "username": username, "office": office}
         )
     else:
         return templates.TemplateResponse(
-            "dashboard.html", 
-            context={"request": request, "username": username, "office": office}, 
-            status_code=200
+            "dashboard.html",
+            {"request": request, "username": username, "office": office}
         )
+
+
+
+# @app.get("/dashboard")
+# # async def dashboard(request: Request, username: str = None, office: str = None, token: str = None):
+# async def dashboard(request: Request, username: str = None, office: str = None, token: str = Depends(oauth2_scheme)):
+#     if not token:
+#         raise HTTPException(status_code=401, detail="Token não fornecido")
+    
+#     username_from_token = validar_token(token)
+#     if not username_from_token or username_from_token != username:
+#         raise HTTPException(status_code=401, detail="Token inválido")
+
+#     if office == 'Superior':
+#         return templates.TemplateResponse(
+#             "dashboard_adm.html", 
+#             context={"request": request, "username": username, "office": office}, 
+#             status_code=200
+#         )
+#     else:
+#         return templates.TemplateResponse(
+#             "dashboard.html", 
+#             context={"request": request, "username": username, "office": office}, 
+#             status_code=200
+#         )
 
 
 
