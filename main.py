@@ -1,21 +1,25 @@
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, RedirectResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import FastAPI, HTTPException, Request, Depends, Header
 from fastapi.templating import Jinja2Templates
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 from pydantic import BaseModel  
 from jose import JWTError, jwt
+from typing import Optional
 import uvicorn
 import sqlite3
+import json
+
 
 CHAVE_SECRETA = "minha_chave_teste"
+TOKENS_FILE = "tokens.json"
 ALGORITMO = "HS256"
 
 app = FastAPI()
-templates = Jinja2Templates(directory="server/web/")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+templates = Jinja2Templates(directory="server/web/")
 
 class User(BaseModel):
     username: str
@@ -48,8 +52,8 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 def get_current_time():
-    current_time_utc = datetime.datetime.utcnow()
-    brazil_time = current_time_utc - datetime.timedelta(hours=3)
+    current_time_utc = datetime.now()
+    brazil_time = current_time_utc - timedelta(hours=3)
     horario = brazil_time.strftime('%H:%M:%S')
     return horario
 
@@ -92,7 +96,20 @@ def validar_token(token: str):
         return username
     except JWTError as e:
         raise HTTPException(status_code=401, detail=f"Token inválido ou expirado: {str(e)}")
-    
+
+# Função para carregar os tokens do arquivo JSON
+def load_tokens():
+    try:
+        with open(TOKENS_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+# Função para salvar os tokens no arquivo JSON
+def save_tokens(tokens):
+    with open(TOKENS_FILE, "w") as file:
+        json.dump(tokens, file)
+
 @app.get("/")
 async def index():
     return FileResponse("server/web/index.html")
@@ -102,7 +119,7 @@ async def index():
     return FileResponse("server/web/abrir_tarefa.html")
 
 @app.post("/login")
-async def login(request: Request, login:User):
+async def login(request: Request, login:User, ip: str = Header(default="127.0.0.1")):
     conn = sqlite3.connect('server/database.db')
     cursor = conn.cursor()
     cursor.execute('SELECT username, password, profissional FROM usuarios WHERE username=?', (login.username,))
@@ -117,8 +134,9 @@ async def login(request: Request, login:User):
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
     
     token_acesso = criar_token_acesso(dados={"sub": user[0]})
-    token = {"access_token": token_acesso, "token_type": "bearer"}
-    
+    tokens = load_tokens()
+    tokens[ip] = token_acesso
+
     if user[2]:
         return {"username": user[0], "office": user[2], "access_token": token_acesso, "token_type": "bearer"}
     else:
@@ -307,10 +325,31 @@ async def task_finished(request: Request, task:dict):
         return {'message': 'Sem tarefas finalizadas!'}
     else: return registro
 
+
+# Endpoint para logout
 @app.post("/logout")
-async def logout(token: str = Depends(oauth2_scheme)):
-    # Lógica para invalidar o token (por exemplo, removê-lo do banco de dados ou cache)
-    return {"message": "Logout realizado com sucesso"}
+async def logout(request: Request, authorization: Optional[str] = Header(None)):
+    ip = request.client.host  # Obtém o IP do cliente
+    tokens = load_tokens()
+
+    if not authorization:
+        raise HTTPException(status_code=400, detail="Token não fornecido")
+
+    token = authorization.split(" ")[1]  # Extrai o token do cabeçalho Authorization
+
+    # Verifica se o token está vinculado ao IP
+    if tokens.get(ip) == token:
+        del tokens[ip]  # Remove o token vinculado ao IP
+        save_tokens(tokens)  # Salva o estado atualizado
+        return {"message": "Logout realizado com sucesso"}
+    else:
+        raise HTTPException(status_code=404, detail="Token não encontrado ou já inválido")
+    
+
+# @app.post("/logout")
+# async def logout(token: str = Depends(oauth2_scheme)):
+#     # Lógica para invalidar o token (por exemplo, removê-lo do banco de dados ou cache)
+#     return {"message": "Logout realizado com sucesso"}
 
 @app.get("/style/{file_name}")
 async def get_script(file_name: str):
@@ -335,7 +374,6 @@ def favicon():
 # Middleware para limitar a taxa de requisições (rate limiting)
 @app.middleware("http")
 async def limitador_de_taxa(request: Request, call_next):
-    # Exemplo simples: limitar requisições por IP em um intervalo de tempo
     ip = request.client.host
     horario_atual = datetime.utcnow()
     # Aqui você pode integrar um rastreamento mais robusto usando Redis ou outro banco de dados
