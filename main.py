@@ -11,7 +11,7 @@ import uvicorn
 import sqlite3
 import json
 
-
+INVALID_TOKENS_FILE = "invalid_tokens.json"
 CHAVE_SECRETA = "minha_chave_teste"
 TOKENS_FILE = "tokens.json"
 ALGORITMO = "HS256"
@@ -97,18 +97,43 @@ def validar_token(token: str):
     except JWTError as e:
         raise HTTPException(status_code=401, detail=f"Token inválido ou expirado: {str(e)}")
 
-# Função para carregar os tokens do arquivo JSON
 def load_tokens():
     try:
         with open(TOKENS_FILE, "r") as file:
-            return json.load(file)
+            sessoes = json.load(file)
+            return sessoes
     except FileNotFoundError:
         return {}
 
-# Função para salvar os tokens no arquivo JSON
 def save_tokens(tokens):
     with open(TOKENS_FILE, "w") as file:
-        json.dump(tokens, file)
+        json.dump(tokens, file, indent=4)
+
+def load_invalid_tokens():
+    try:
+        with open(INVALID_TOKENS_FILE, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+
+def save_invalid_tokens(invalid_tokens):
+    with open(INVALID_TOKENS_FILE, "w") as file:
+        json.dump(invalid_tokens, file, indent=4)
+
+def is_token_valid(token):
+    invalid_tokens = load_invalid_tokens()
+    if token in invalid_tokens:
+        return False  # Token inválido
+    return True  # Token válido
+
+
+@app.middleware("http")
+async def limitador_de_taxa(request: Request, call_next):
+    ip = request.client.host
+    horario_atual = datetime.utcnow()
+    # Aqui você pode integrar um rastreamento mais robusto usando Redis ou outro banco de dados
+    resposta = await call_next(request)
+    return resposta
 
 @app.get("/")
 async def index():
@@ -119,7 +144,7 @@ async def index():
     return FileResponse("server/web/abrir_tarefa.html")
 
 @app.post("/login")
-async def login(request: Request, login:User, ip: str = Header(default="127.0.0.1")):
+async def login(request: Request, login:User):
     conn = sqlite3.connect('server/database.db')
     cursor = conn.cursor()
     cursor.execute('SELECT username, password, profissional FROM usuarios WHERE username=?', (login.username,))
@@ -135,7 +160,15 @@ async def login(request: Request, login:User, ip: str = Header(default="127.0.0.
     
     token_acesso = criar_token_acesso(dados={"sub": user[0]})
     tokens = load_tokens()
+    ip = request.client.host
     tokens[ip] = token_acesso
+    if ip in tokens:
+        if tokens[ip] != token_acesso:
+            tokens[ip] = token_acesso
+    else:
+        tokens[ip] = token_acesso
+
+    save_tokens(tokens)
 
     if user[2]:
         return {"username": user[0], "office": user[2], "access_token": token_acesso, "token_type": "bearer"}
@@ -326,25 +359,29 @@ async def task_finished(request: Request, task:dict):
     else: return registro
 
 
-# Endpoint para logout
 @app.post("/logout")
 async def logout(request: Request, authorization: Optional[str] = Header(None)):
-    ip = request.client.host  # Obtém o IP do cliente
+    ip = request.client.host
     tokens = load_tokens()
+    invalid_tokens = load_invalid_tokens()
 
     if not authorization:
         raise HTTPException(status_code=400, detail="Token não fornecido")
 
-    token = authorization.split(" ")[1]  # Extrai o token do cabeçalho Authorization
+    try:
+        token = authorization.split(" ")[1]  # Extrai o token do cabeçalho Authorization
+    except IndexError:
+        return HTTPException(status_code=400, detail="Formato do token inválido")
 
-    # Verifica se o token está vinculado ao IP
-    if tokens.get(ip) == token:
+    if ip in tokens and tokens[ip]:# == token:
+        invalid_tokens.append(tokens[ip])
         del tokens[ip]  # Remove o token vinculado ao IP
-        save_tokens(tokens)  # Salva o estado atualizado
+        save_tokens(tokens)  # Salva o estado atualizado no arquivo JSON
+        save_invalid_tokens(invalid_tokens)
         return {"message": "Logout realizado com sucesso"}
     else:
-        raise HTTPException(status_code=404, detail="Token não encontrado ou já inválido")
-    
+        # Retorna erro caso o IP não esteja registrado ou o token seja inválido
+        return HTTPException(status_code=404, detail="Token não encontrado ou já inválido")
 
 # @app.post("/logout")
 # async def logout(token: str = Depends(oauth2_scheme)):
@@ -370,15 +407,6 @@ async def get_script(file_name: str):
 @app.get("/favicon.ico", include_in_schema=False)
 def favicon():
     return FileResponse("server/web/static/favicon.ico")
-
-# Middleware para limitar a taxa de requisições (rate limiting)
-@app.middleware("http")
-async def limitador_de_taxa(request: Request, call_next):
-    ip = request.client.host
-    horario_atual = datetime.utcnow()
-    # Aqui você pode integrar um rastreamento mais robusto usando Redis ou outro banco de dados
-    resposta = await call_next(request)
-    return resposta
 
 if "__main__" == __name__:
         uvicorn.run(
