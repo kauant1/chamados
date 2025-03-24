@@ -12,18 +12,19 @@ async function fetchTasks() {
             //     cell.classList.add("emoji-cell");
             // } funcionando 
             if (index === 7) { // Supondo que a coluna "Finalizada" é o índice 7
-                const img = document.createElement("img"); // Cria o elemento de imagem
-                img.src = item === "true" ? "https://cdn-icons-png.flaticon.com/128/6782/6782609.png" : "https://cdn-icons-png.flaticon.com/128/6782/6782613.png"; // Define o caminho da imagem com base no valor
-                img.alt = item === "true" ? "Finalizado" : "Não finalizado"; // Define um texto alternativo descritivo
-                img.classList.add("emoji-cell-img"); // Adiciona uma classe para customizar as imagens
-                cell.appendChild(img); // Adiciona o elemento de imagem à célula
+                // const img = document.createElement("img"); // Cria o elemento de imagem
+                // img.src = item === "true" ? "https://cdn-icons-png.flaticon.com/128/6782/6782609.png" : "https://cdn-icons-png.flaticon.com/128/6782/6782613.png"; // Define o caminho da imagem com base no valor
+                // img.alt = item === "true" ? "Finalizado" : "Não finalizado"; // Define um texto alternativo descritivo
+                // img.classList.add("emoji-cell-img"); // Adiciona uma classe para customizar as imagens
+                // cell.appendChild(img); // Adiciona o elemento de imagem à célula
+
+                const svg = document.createElement("svg");
+                svg.innerHTML = item === "true" 
+                    ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="green" width="24px" height="24px"><circle cx="12" cy="12" r="10"/></svg>` 
+                    : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" width="24px" height="24px"><circle cx="12" cy="12" r="10"/></svg>`;
+                cell.appendChild(svg);
             }
 
-            // Alteração: Colunas "Inicio" e "Termino"
-            // else if (index === 8 || index === 9) {
-            //     cell.textContent = item === "Null" ? `⏱️` : item;
-            //     if (item === "Null") cell.classList.add("emoji-cell");
-            // }
             else if (index === 8 || index === 9) {
                 if (item === "Null") {
                     const img = document.createElement("img");
@@ -102,7 +103,6 @@ async function fetchTasks() {
                 cell.textContent = item; // Preenche as demais células normalmente
             }
 
-            // cell.textContent = item;
             row.appendChild(cell);
             row.className = "color-row";
         });

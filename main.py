@@ -59,12 +59,12 @@ def get_current_time():
 
 def calculate_service_duration(inicio, termino):
     try:
-        hora_inicio = datetime.datetime.strptime(inicio, "%H:%M:%S")
-        hora_termino = datetime.datetime.strptime(termino, "%H:%M:%S")
+        hora_inicio = datetime.strptime(inicio, "%H:%M:%S")
+        hora_termino = datetime.strptime(termino, "%H:%M:%S")
     except ValueError:
         raise ValueError("Formatos de hora inválidos.")
     duracao = hora_termino - hora_inicio
-    duracao = datetime.timedelta(
+    duracao = timedelta(
         hours=max(0, duracao.seconds // 3600),
         minutes=max(0, (duracao.seconds % 3600) // 60),
         seconds=max(0, duracao.seconds % 60)
@@ -183,11 +183,13 @@ async def dashboard(request: Request, username: str = None, office: str = None, 
     if not token:
         raise HTTPException(status_code=401, detail="Token não fornecido")
     
+    if token in load_invalid_tokens():
+        raise HTTPException(status_code=401, detail="Token fornecido vencido ou revogado")
+        
     username_from_token = validar_token(token)
     if not username_from_token or username_from_token != username:
         raise HTTPException(status_code=401, detail="Token inválido")
     
-    # Renderização condicional com base no cargo (office)
     if office == 'Superior':
         return templates.TemplateResponse("dashboard_adm.html", context={"request": request, "username": username, "office": office}, status_code = 200)
     else:
@@ -358,7 +360,6 @@ async def task_finished(request: Request, task:dict):
         return {'message': 'Sem tarefas finalizadas!'}
     else: return registro
 
-
 @app.post("/logout")
 async def logout(request: Request, authorization: Optional[str] = Header(None)):
     ip = request.client.host
@@ -382,11 +383,6 @@ async def logout(request: Request, authorization: Optional[str] = Header(None)):
     else:
         # Retorna erro caso o IP não esteja registrado ou o token seja inválido
         return HTTPException(status_code=404, detail="Token não encontrado ou já inválido")
-
-# @app.post("/logout")
-# async def logout(token: str = Depends(oauth2_scheme)):
-#     # Lógica para invalidar o token (por exemplo, removê-lo do banco de dados ou cache)
-#     return {"message": "Logout realizado com sucesso"}
 
 @app.get("/style/{file_name}")
 async def get_script(file_name: str):

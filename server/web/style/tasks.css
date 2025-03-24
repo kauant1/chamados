@@ -21,19 +21,19 @@
 /* cores da tabela */
 .task-table th {
     /* cabeçaljo */
-    background-color: var(--cinza-4);
+    background-color: var(--cinza-5);
 }
 .task-table tr:nth-child(even) {
     /* linha impar */
-    background-color: var(--cinza-3);
+    background-color: var(--cinza-4);
 }
 .task-table tr:nth-child(odd) {
     /* linha par */
-    background-color: var(--cinza-2);
+    background-color: var(--cinza-3);
 }
 .task-table tr:hover {
     /* linha em seleção */
-    background-color: var(--cinza-1);
+    background-color: var(--cinza-2);
 }
 .task-table th, .task-table td {
     /* grade tabela */
@@ -51,6 +51,7 @@
     height: 25px; /* Altura da imagem */
     display: block;
     margin: 0 auto; /* Centraliza a imagem */
+    fill: var(--cor-azul-3);
 }
 
 .action-buttons {
