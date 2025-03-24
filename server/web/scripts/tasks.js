@@ -1,3 +1,45 @@
+document.addEventListener("DOMContentLoaded", fetchTasks);
+async function openEditPopup(taskId) {
+    const popup = document.getElementById("popup");
+    const saveButton = document.getElementById("save-button");
+    const cancelButton = document.getElementById("cancel-button");
+
+    // Exibe o popup
+    popup.style.display = "block";
+
+    saveButton.onclick = async () => {
+        const newValue = document.getElementById("new-value-input").value;
+        try {
+            const response = await fetch(`/edit-task/${taskId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ new_value: newValue })
+            });
+
+            if (response.ok) {
+                alert("Tarefa editada com sucesso!");
+                fetchTasks(); // Atualiza a tabela
+            } else {
+                alert("Erro ao editar a tarefa.");
+            }
+        } catch (error) {
+            console.error("Erro:", error);
+        } finally {
+            popup.style.display = "none";
+        }
+    };
+
+    cancelButton.onclick = () => {
+        popup.style.display = "none";
+    };
+}
+
+
+
+
+
+
+
 async function fetchTasks() {
     const response = await fetch('/all-task-data');
     const data = await response.json();
@@ -133,7 +175,6 @@ async function fetchTasks() {
         buttonContainer.appendChild(deleteButton);
         actionCell.appendChild(buttonContainer);
         row.appendChild(actionCell);
-
         tbody.appendChild(row);
     });
 }

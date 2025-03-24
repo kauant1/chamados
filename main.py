@@ -45,6 +45,9 @@ class Token(BaseModel):
 class UserInDB(User):
     hashed_password: str
 
+class TaskEdit(BaseModel):
+    new_value: str
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -359,6 +362,53 @@ async def task_finished(request: Request, task:dict):
     if registro == []:
         return {'message': 'Sem tarefas finalizadas!'}
     else: return registro
+
+@app.delete("/delete-task/{task_id}")
+async def delete_task(task_id: int):
+    conn = sqlite3.connect('server/database.db')
+    cursor = conn.cursor()
+    
+    # Verifica se a tarefa existe
+    cursor.execute("SELECT * FROM tarefas WHERE id = ?", (task_id,))
+    task = cursor.fetchone()
+    
+    if not task:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Tarefa não encontrada")
+    
+    # Exclui a tarefa do banco de dados
+    cursor.execute("DELETE FROM tarefas WHERE id = ?", (task_id,))
+    conn.commit()
+    
+    cursor.close()
+    conn.close()
+    
+    return {"mensagem": f"Tarefa com ID {task_id} foi excluída com sucesso!"}
+
+@app.post("/edit-task/{task_id}")
+async def edit_task(task_id: int, task_edit: TaskEdit):
+    conn = sqlite3.connect('server/database.db')
+    cursor = conn.cursor()
+    
+    # Verifica se a tarefa existe
+    cursor.execute("SELECT * FROM tarefas WHERE id = ?", (task_id,))
+    task = cursor.fetchone()
+    
+    if not task:
+        cursor.close()
+        conn.close()
+        raise HTTPException(status_code=404, detail="Tarefa não encontrada")
+    
+    # Atualiza o valor da tarefa
+    cursor.execute("UPDATE tarefas SET descricao = ? WHERE id = ?", (task_edit.new_value, task_id))
+    conn.commit()
+    
+    cursor.close()
+    conn.close()
+    
+    return {"mensagem": f"Tarefa com ID {task_id} atualizada com sucesso!"}
+
 
 @app.post("/logout")
 async def logout(request: Request, authorization: Optional[str] = Header(None)):

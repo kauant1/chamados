@@ -43,6 +43,14 @@
             <!-- Tarefas serão inseridas aqui dinamicamente -->
         </tbody>
     </table>
+    <div id="popup" style="display: none;">
+        <select id="task-selection">
+            <!-- As opções serão preenchidas dinamicamente -->
+        </select>
+        <input type="text" id="new-value-input" placeholder="Novo valor">
+        <button id="save-button">Salvar</button>
+        <button id="cancel-button">Cancelar</button>
+    </div>
 </body>
 <footer>
     <strong class="Office">{{ office }}</strong>
