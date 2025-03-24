@@ -16,7 +16,7 @@ async function fetchTasks() {
                 // img.src = item === "true" ? "https://cdn-icons-png.flaticon.com/128/6782/6782609.png" : "https://cdn-icons-png.flaticon.com/128/6782/6782613.png"; // Define o caminho da imagem com base no valor
                 // img.alt = item === "true" ? "Finalizado" : "Não finalizado"; // Define um texto alternativo descritivo
                 // img.classList.add("emoji-cell-img"); // Adiciona uma classe para customizar as imagens
-                // cell.appendChild(img); // Adiciona o elemento de imagem à célula
+                // cell.appendChild(img);
 
                 const svg = document.createElement("svg");
                 svg.innerHTML = item === "true" 
