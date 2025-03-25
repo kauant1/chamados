@@ -1,43 +1,164 @@
-document.addEventListener("DOMContentLoaded", fetchTasks);
-async function openEditPopup(taskId) {
-    const popup = document.getElementById("popup");
+// async function openEditChecklist(taskId) {
+//     const container = document.getElementById("edit-container");
+//     const saveButton = document.getElementById("save-button");
+//     const cancelButton = document.getElementById("cancel-button");
+//     const newValueInput = document.getElementById("new-value-input");
+
+//     // Exibe o container
+//     container.style.display = "block";
+
+//     // Ação ao clicar no botão "Salvar"
+//     saveButton.onclick = async () => {
+//         const selectedOption = document.getElementById("field-select").value; // Valor do campo selecionado
+//         const newValue = newValueInput.value;
+
+//         if (!selectedOption) {
+//             alert("Por favor, selecione uma opção para editar.");
+//             return;
+//         }
+
+//         if (!newValue) {
+//             alert("Por favor, insira um novo valor.");
+//             return;
+//         }
+
+//         try {
+//             const response = await fetch(`/edit-task/${taskId}`, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({
+//                     field: selectedOption, // Corrigido para enviar diretamente o valor
+//                     new_value: newValue
+//                 })
+//             });
+
+//             if (response.ok) {
+//                 alert("Tarefa editada com sucesso!");
+//                 fetchTasks(); // Atualiza a lista de tarefas
+//             } else {
+//                 alert("Erro ao editar a tarefa. Tente novamente.");
+//             }
+//         } catch (error) {
+//             console.error("Erro ao conectar com o servidor:", error);
+//         } finally {
+//             container.style.display = "none"; // Fecha o container
+//         }
+//     };
+
+//     // Ação ao clicar no botão "Cancelar"
+//     cancelButton.onclick = () => {
+//         container.style.display = "none"; // Fecha o container sem salvar
+//     };
+// }
+
+async function openEditChecklist(taskId) {
+    const container = document.getElementById("edit-container");
     const saveButton = document.getElementById("save-button");
     const cancelButton = document.getElementById("cancel-button");
+    const newValueInput = document.getElementById("new-value-input");
+    const fieldSelect = document.getElementById("field-select");
+    const secondarySelectContainer = document.createElement("div");
+    const secondarySelect = document.createElement("select");
 
-    // Exibe o popup
-    popup.style.display = "block";
+    // Configuração do segundo select
+    secondarySelect.id = "secondary-select";
+    secondarySelect.style.display = "none"; // Esconde inicialmente
+    secondarySelectContainer.appendChild(secondarySelect);
+    container.appendChild(secondarySelectContainer);
 
+    // Exibe o container
+    container.style.display = "block";
+
+    // Monitora mudanças no campo principal (field-select)
+    fieldSelect.addEventListener("change", () => {
+        const selectedOption = fieldSelect.value;
+
+        // Limpa o segundo select
+        secondarySelect.innerHTML = "";
+
+        // Exibe opções diferentes com base na escolha
+        if (selectedOption === "finalizada") {
+            secondarySelect.style.display = "block";
+            const trueOption = document.createElement("option");
+            trueOption.value = "true";
+            trueOption.textContent = "True";
+
+            const falseOption = document.createElement("option");
+            falseOption.value = "false";
+            falseOption.textContent = "False";
+
+            secondarySelect.appendChild(trueOption);
+            secondarySelect.appendChild(falseOption);
+            newValueInput.style.display= "none";
+        } else if (selectedOption === "area") {
+            secondarySelect.style.display = "block";
+            const option1 = document.createElement("option");
+            option1.value = "T.I.";
+            option1.textContent = "T.I.";
+
+            const option2 = document.createElement("option");
+            option2.value = "Mecânico";
+            option2.textContent = "Mecânico";
+
+            const option3 = document.createElement("option");
+            option3.value = "Elétrico";
+            option3.textContent = "Elétrico";
+
+            secondarySelect.appendChild(option1);
+            secondarySelect.appendChild(option2);
+            secondarySelect.appendChild(option3);
+            newValueInput.style.display= "none";
+        } else {
+            secondarySelect.style.display = "none";
+            newValueInput.style.display= "block";
+        }
+    });
+
+    // Ação ao clicar no botão "Salvar"
     saveButton.onclick = async () => {
-        const newValue = document.getElementById("new-value-input").value;
+        const selectedOption = fieldSelect.value;
+        const newValue = selectedOption === "finalizada" || selectedOption === "area" 
+            ? secondarySelect.value 
+            : newValueInput.value;
+
+        if (!selectedOption) {
+            alert("Por favor, selecione uma opção para editar.");
+            return;
+        }
+
+        if (!newValue) {
+            alert("Por favor, insira um novo valor.");
+            return;
+        }
+
         try {
             const response = await fetch(`/edit-task/${taskId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ new_value: newValue })
+                body: JSON.stringify({
+                    field: selectedOption,
+                    new_value: newValue
+                })
             });
 
             if (response.ok) {
                 alert("Tarefa editada com sucesso!");
-                fetchTasks(); // Atualiza a tabela
+                fetchTasks(); // Atualiza a lista de tarefas
             } else {
-                alert("Erro ao editar a tarefa.");
+                alert("Erro ao editar a tarefa. Tente novamente.");
             }
         } catch (error) {
-            console.error("Erro:", error);
+            console.error("Erro ao conectar com o servidor:", error);
         } finally {
-            popup.style.display = "none";
+            container.style.display = "none"; // Fecha o container
         }
     };
 
+    // Ação ao clicar no botão "Cancelar"
     cancelButton.onclick = () => {
-        popup.style.display = "none";
+        container.style.display = "none"; // Fecha o container sem salvar
     };
 }
-
-
-
-
-
 
 
 async function fetchTasks() {
@@ -160,7 +281,8 @@ async function fetchTasks() {
         img.classList.add("emoji-cell-img");
         // editButton.textContent = "✏️";
         editButton.appendChild(img);
-        editButton.addEventListener("click", () => editTask(task[0]));
+        // editButton.addEventListener("click", () => editTask(task[0]));
+        editButton.addEventListener("click", () => openEditChecklist(task[0]));
 
 
         const deleteButton = document.createElement("button");
@@ -181,10 +303,11 @@ async function fetchTasks() {
 
 async function editTask(taskId) {
     try {
+        const newValue = document.getElementById("new-value-input").value; // Ou obtenha o valor corretamente
         const response = await fetch(`/edit-task/${taskId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: taskId })
+            body: JSON.stringify({ new_value: newValue }) // Corrigido aqui
         });
 
         if (response.ok) {
@@ -243,5 +366,8 @@ async function logout() {
     }
 }
 
+
+
+// editButton.addEventListener("click", () => openEditChecklist(task[0]));
 document.addEventListener("DOMContentLoaded", fetchTasks);
 document.querySelector('.logout-button').addEventListener('click', logout);

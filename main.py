@@ -7,8 +7,9 @@ from passlib.context import CryptContext
 from pydantic import BaseModel  
 from jose import JWTError, jwt
 from typing import Optional
-import uvicorn
 import sqlite3
+import uvicorn
+import pytz
 import json
 
 INVALID_TOKENS_FILE = "invalid_tokens.json"
@@ -46,6 +47,7 @@ class UserInDB(User):
     hashed_password: str
 
 class TaskEdit(BaseModel):
+    field: str
     new_value: str
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -55,8 +57,8 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 def get_current_time():
-    current_time_utc = datetime.now()
-    brazil_time = current_time_utc - timedelta(hours=3)
+    tz_brazil = pytz.timezone("America/Sao_Paulo")
+    brazil_time = datetime.now(tz_brazil)
     horario = brazil_time.strftime('%H:%M:%S')
     return horario
 
@@ -390,25 +392,19 @@ async def delete_task(task_id: int):
 async def edit_task(task_id: int, task_edit: TaskEdit):
     conn = sqlite3.connect('server/database.db')
     cursor = conn.cursor()
-    
-    # Verifica se a tarefa existe
     cursor.execute("SELECT * FROM tarefas WHERE id = ?", (task_id,))
     task = cursor.fetchone()
-    
     if not task:
         cursor.close()
         conn.close()
         raise HTTPException(status_code=404, detail="Tarefa não encontrada")
-    
-    # Atualiza o valor da tarefa
-    cursor.execute("UPDATE tarefas SET descricao = ? WHERE id = ?", (task_edit.new_value, task_id))
+    query = f"UPDATE tarefas SET {task_edit.field} = ? WHERE id = ?"
+    cursor.execute(query, (task_edit.new_value, task_id))
+    # cursor.execute("UPDATE tarefas SET problema = ? WHERE id = ?", (task_edit.new_value, task_id))
     conn.commit()
-    
     cursor.close()
     conn.close()
-    
     return {"mensagem": f"Tarefa com ID {task_id} atualizada com sucesso!"}
-
 
 @app.post("/logout")
 async def logout(request: Request, authorization: Optional[str] = Header(None)):

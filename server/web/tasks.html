@@ -22,6 +22,24 @@
 </header>
 <body>
     <h1>Lista de Tarefas</h1>
+    <div id="edit-container" style="display: none; border: 1px solid #ccc; padding: 10px;">
+        <p>Selecione o dado que deseja alterar:</p>
+        <input id="new-value-input" type="text" placeholder="Digite o novo valor" />
+        <select required class="body_section_escolha1_select1" id="field-select">
+            <option value="null" disabled selected>Selecione</option>
+            <option value="problema">Problema</option>
+            <option value="finalizada">Finalizada</option>
+            <option value="setor">Setor</option>
+            <option value="area">Area</option>
+        </select>
+        <div id="secondary-select-container" style="display: none; margin-top: 10px;">
+            <label for="secondary-select">Escolha:</label>
+            <select id="secondary-select"></select>
+        </div>
+        
+        <button id="save-button">Salvar</button>
+        <button id="cancel-button">Cancelar</button>
+    </div>
     <table class="task-table">
         <thead>
             <tr>
@@ -43,14 +61,6 @@
             <!-- Tarefas serão inseridas aqui dinamicamente -->
         </tbody>
     </table>
-    <div id="popup" style="display: none;">
-        <select id="task-selection">
-            <!-- As opções serão preenchidas dinamicamente -->
-        </select>
-        <input type="text" id="new-value-input" placeholder="Novo valor">
-        <button id="save-button">Salvar</button>
-        <button id="cancel-button">Cancelar</button>
-    </div>
 </body>
 <footer>
     <strong class="Office">{{ office }}</strong>
