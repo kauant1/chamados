@@ -35,7 +35,6 @@ async function handleLogin() {
 
     if (response.headers.get('Content-Type') === 'application/json') {
         const user = await response.json();
-        console.log("Dados protegidos:", user);
         localStorage.setItem('token', user.access_token);
         // window.location.href = '/dashboard?username=' + user.username + '&office=' + user.office;
         window.location.href = `/dashboard?username=${user.username}&office=${user.office}`;
@@ -110,19 +109,36 @@ async function acessarDashboard(userdados) {
     if (response.ok) {
         const html = await response.text();
         document.body.innerHTML = html;
-
-        // Carregar o dashboard.js
-        const script = document.createElement('script');
-        script.src = '/scripts/dashboard.js';
-        script.type = 'text/javascript';
-        document.body.appendChild(script);
-
-        // Carregar o dashboard.css
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/style/dashboard.css';
-        document.head.appendChild(link);
+    
+        // Verifica o valor de 'office' e carrega os arquivos correspondentes
+        if (office === "Superior") {
+            // Carregar o dashboard_adm.js
+            const script = document.createElement('script');
+            script.src = '/scripts/dashboard_adm.js';
+            script.type = 'text/javascript';
+            document.body.appendChild(script);
+    
+            // Carregar o dashboard_adm.css
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/style/dashboard_adm.css';
+            document.head.appendChild(link);
+        } else {
+            // Carregar o dashboard.js
+            const script = document.createElement('script');
+            script.src = '/scripts/dashboard.js';
+            script.type = 'text/javascript';
+            document.body.appendChild(script);
+    
+            // Carregar o dashboard.css
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/style/dashboard.css';
+            document.head.appendChild(link);
+        }
+    
     }
+    
 
     else {
         console.error("Erro ao acessar o dashboard:", await response.text());

@@ -160,7 +160,6 @@ async function openEditChecklist(taskId) {
     };
 }
 
-
 async function fetchTasks() {
     const response = await fetch('/all-task-data');
     const data = await response.json();
