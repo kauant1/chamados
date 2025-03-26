@@ -40,27 +40,29 @@
         <button id="save-button">Salvar</button>
         <button id="cancel-button">Cancelar</button>
     </div>
-    <table class="task-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Responsavel</th>
-                <th>Setor</th>
-                <th>Horario</th>
-                <th>Area</th>
-                <th>Problema</th>
-                <th>Profissional</th>
-                <th>Fin.</th>
-                <th>Inicio</th>
-                <th>Termino</th>
-                <th>Duracao</th>
-                <th>Editar</th>
-            </tr>
-        </thead>
-        <tbody id="task-table-body">
-            <!-- Tarefas serão inseridas aqui dinamicamente -->
-        </tbody>
-    </table>
+    <div class="size-table">
+        <table class="task-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th style="width: 100px;">Resp.</th>
+                    <th style="width: 90px;">Setor</th>
+                    <th style="width: 100px;">Horario</th>
+                    <th style="width: 50px;">Area</th>
+                    <th>Problema</th>
+                    <th style="width: 150px;">Profissional</th>
+                    <th style="width: 50px;">Fin.</th>
+                    <th style="width: 100px;">Inicio</th>
+                    <th style="width: 100px;">Termino</th>
+                    <th style="width: 100px;">Duracao</th>
+                    <th style="width: 90px;">Editar</th>
+                </tr>
+            </thead>
+            <tbody id="task-table-body">
+                <!-- Tarefas serão inseridas aqui dinamicamente -->
+            </tbody>
+        </table>
+    </div>
 </body>
 <footer>
     <strong class="Office">{{ office }}</strong>

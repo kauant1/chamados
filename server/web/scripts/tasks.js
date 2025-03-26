@@ -311,6 +311,7 @@ async function editTask(taskId) {
 
         if (response.ok) {
             console.log(`Tarefa com ID ${taskId} editada com sucesso.`);
+            window.location.reload();
         } else {
             console.error("Erro ao editar a tarefa:", response.status);
         }
@@ -329,9 +330,24 @@ async function deleteTask(taskId) {
 
         if (response.ok) {
             console.log(`Tarefa com ID ${taskId} excluída com sucesso.`);
-            // Remover a linha correspondente da tabela
-            const row = document.querySelector(`tr td:first-child[textContent="${taskId}"]`).parentNode;
-            row.remove();
+            
+            const rows = document.querySelectorAll("tr");
+            let rowToRemove = null;
+
+            rows.forEach(row => {
+                const cell = row.querySelector("td:first-child");
+                if (cell && cell.textContent === String(taskId)) {
+                    rowToRemove = row;
+                }
+            });
+
+            if (rowToRemove) {
+                rowToRemove.remove();
+            } else {
+                console.warn(`Não foi possível encontrar a linha correspondente à tarefa com ID ${taskId}.`);
+            }
+
+            // window.location.reload();
         } else {
             console.error("Erro ao excluir a tarefa:", response.status);
         }

@@ -12,23 +12,34 @@
     background-color: var(--cor-azul-4); /* Cor ao pressionar */
 }
 
+.size-table {
+    display: flex;
+    width: 100%; /* Mantém a tabela na largura total da página */
+    overflow-x: auto; /* Adiciona rolagem horizontal, se necessário */
+    justify-content: center; /* Centraliza o conteúdo */
+}
 .task-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: collapse; /* Remove espaçamento extra nas bordas */
     margin-top: 20px;
+    table-layout: fixed; /* Faz com que as colunas tenham largura fixa */
+    word-wrap: break-word; /* Faz as palavras quebrarem dentro da célula */
 }
 
 /* cores da tabela */
 .task-table th {
-    /* cabeçaljo */
+    /* cabeçalho */
+    font-size: 15px;
     background-color: var(--cinza-5);
 }
 .task-table tr:nth-child(even) {
     /* linha impar */
+    font-size: 12px;
     background-color: var(--cinza-4);
 }
 .task-table tr:nth-child(odd) {
     /* linha par */
+    font-size: 12px;
     background-color: var(--cinza-3);
 }
 .task-table tr:hover {
@@ -36,10 +47,12 @@
     background-color: var(--cinza-2);
 }
 .task-table th, .task-table td {
-    /* grade tabela */
     border: 1px solid var(--cinza-5);
-    padding: 10px;
-    text-align: center;
+    padding: 8px; /* Adiciona espaçamento interno */
+    text-align: center; /* Garante alinhamento adequado */
+    overflow: auto; /* Evita o transbordamento de texto */
+    /* text-overflow: ellipsis; Adiciona reticências caso o texto seja muito longo */
+    white-space: nowrap; 
 }
 
 .emoji-cell {
