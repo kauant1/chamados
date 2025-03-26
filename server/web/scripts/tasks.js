@@ -1,56 +1,3 @@
-// async function openEditChecklist(taskId) {
-//     const container = document.getElementById("edit-container");
-//     const saveButton = document.getElementById("save-button");
-//     const cancelButton = document.getElementById("cancel-button");
-//     const newValueInput = document.getElementById("new-value-input");
-
-//     // Exibe o container
-//     container.style.display = "block";
-
-//     // Ação ao clicar no botão "Salvar"
-//     saveButton.onclick = async () => {
-//         const selectedOption = document.getElementById("field-select").value; // Valor do campo selecionado
-//         const newValue = newValueInput.value;
-
-//         if (!selectedOption) {
-//             alert("Por favor, selecione uma opção para editar.");
-//             return;
-//         }
-
-//         if (!newValue) {
-//             alert("Por favor, insira um novo valor.");
-//             return;
-//         }
-
-//         try {
-//             const response = await fetch(`/edit-task/${taskId}`, {
-//                 method: 'POST',
-//                 headers: { 'Content-Type': 'application/json' },
-//                 body: JSON.stringify({
-//                     field: selectedOption, // Corrigido para enviar diretamente o valor
-//                     new_value: newValue
-//                 })
-//             });
-
-//             if (response.ok) {
-//                 alert("Tarefa editada com sucesso!");
-//                 fetchTasks(); // Atualiza a lista de tarefas
-//             } else {
-//                 alert("Erro ao editar a tarefa. Tente novamente.");
-//             }
-//         } catch (error) {
-//             console.error("Erro ao conectar com o servidor:", error);
-//         } finally {
-//             container.style.display = "none"; // Fecha o container
-//         }
-//     };
-
-//     // Ação ao clicar no botão "Cancelar"
-//     cancelButton.onclick = () => {
-//         container.style.display = "none"; // Fecha o container sem salvar
-//     };
-// }
-
 async function openEditChecklist(taskId) {
     const container = document.getElementById("edit-container");
     const saveButton = document.getElementById("save-button");
@@ -382,8 +329,5 @@ async function logout() {
     }
 }
 
-
-
-// editButton.addEventListener("click", () => openEditChecklist(task[0]));
 document.addEventListener("DOMContentLoaded", fetchTasks);
 document.querySelector('.logout-button').addEventListener('click', logout);

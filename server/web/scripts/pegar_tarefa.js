@@ -23,19 +23,15 @@ button_send.addEventListener('click', async () => {
         body: JSON.stringify(dataa)
     });
 
-    // const data = await response.json();
-
     // Se a solicitação de login for bem-sucedida, obtemos o nome de usuário
     if (response.ok) {
         const userData = await response.json();
         
-        // Agora, usamos o nome de usuário para fazer a solicitação para a rota /chamados
         const chamadosResponse = await fetch(`/chamados?username=${userData.username}`);
 
-        // Verificamos se a solicitação de chamados foi bem-sucedida
         if (chamadosResponse.ok) {
             const chamadosData = await chamadosResponse.json();
-            console.log(chamadosData); // Aqui você pode lidar com os dados dos chamados recebidos
+            console.log(chamadosData);
             displayData(chamadosData);
         } else {
             console.error('Erro ao obter chamados:', chamadosResponse.status);

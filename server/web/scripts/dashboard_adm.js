@@ -11,27 +11,10 @@ function createButton(button, text, margem) {
     return button;
 };
 
-// function createButton(button, imgSrc, margem) {
-//     const img = document.createElement("img");
-//     img.src = imgSrc; // URL da imagem
-//     img.classList.add("emoji-cell-img");
-//     button.appendChild(img); // Adiciona a imagem ao botão
-//     button.classList.add('button_get_task');
-//     button.classList.add('button_get_task');
-//     document.getElementById('ContainerTasksButtons').appendChild(button);
-//     return button;
-// };
-
-
 if (office === 'Superior') {
     const button_newTask = document.createElement('button')
     const button_viewalltask = document.createElement('button')
-    
-    // Adiciona imagens diferentes para cada botão
-    // createButton(button_newTask, 'https://cdn-icons-png.flaticon.com/512/1091/1091916.png', '8px'); // URL da imagem do botão "Nova Tarefa"
-    // createButton(button_viewalltask, 'https://cdn-icons-png.flaticon.com/512/1092/1092162.png ', '8px'); // URL da imagem do botão "Ver Chamados"
 
-    
     createButton(button_newTask, 'Nova Tarefa', '8px')
     createButton(button_viewalltask, 'Ver Chamados', '8px')
 
@@ -84,7 +67,7 @@ if (office === 'Superior') {
         button_query_task.disabled = false;
         button_reload.disabled = true;
         view_my_tasks.disabled = false;
-        container.innerHTML = ''; // Limpa o conteúdo anterior
+        container.innerHTML = '';
         let i = 0;
         data.forEach((item, index) => {
             const section = document.createElement('section');
@@ -301,9 +284,8 @@ if (office === 'Superior') {
 // Função para realizar logout
 async function logout() {
     try {
-        // Enviar requisição para o servidor para invalidar o token
         const response = await fetch('/logout', {
-            method: 'POST', // Método POST para informar o logout
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}` // Passa o token no cabeçalho
@@ -330,5 +312,4 @@ async function logout() {
     }
 }
 
-// Adicione um evento de clique ao botão "Sair"
 document.querySelector('.logout-button').addEventListener('click', logout);

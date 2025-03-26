@@ -36,9 +36,7 @@ async function handleLogin() {
     if (response.headers.get('Content-Type') === 'application/json') {
         const user = await response.json();
         localStorage.setItem('token', user.access_token);
-        // window.location.href = '/dashboard?username=' + user.username + '&office=' + user.office;
         window.location.href = `/dashboard?username=${user.username}&office=${user.office}`;
-        // window.location.href = `/dashboard?username=${user.username}&office=${user.office}&token=${localStorage.getItem('token')}`;
     } else if (response.headers.get('Content-Type') === 'text/html') {
         response.text().then(data => {document.body.innerHTML = data; });
     } else {
@@ -112,25 +110,21 @@ async function acessarDashboard(userdados) {
     
         // Verifica o valor de 'office' e carrega os arquivos correspondentes
         if (office === "Superior") {
-            // Carregar o dashboard_adm.js
             const script = document.createElement('script');
             script.src = '/scripts/dashboard_adm.js';
             script.type = 'text/javascript';
             document.body.appendChild(script);
-    
-            // Carregar o dashboard_adm.css
+
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = '/style/dashboard_adm.css';
             document.head.appendChild(link);
         } else {
-            // Carregar o dashboard.js
             const script = document.createElement('script');
             script.src = '/scripts/dashboard.js';
             script.type = 'text/javascript';
             document.body.appendChild(script);
-    
-            // Carregar o dashboard.css
+
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = '/style/dashboard.css';
@@ -152,13 +146,3 @@ document.addEventListener('keydown', (event) => {
         handleLogin();
     }
 });
-
-// const response = await fetch('/dashboard', {
-//     method: 'GET',
-//     headers: {
-//         'Authorization': `Bearer ${token}`, // Token no cabeçalho
-//         'Content-Type': 'application/json',
-//         'username': username.value,
-//         'password': password.value
-//     }
-// });
