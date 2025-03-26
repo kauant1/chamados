@@ -147,6 +147,7 @@ async function openEditChecklist(taskId) {
             } else {
                 alert("Erro ao editar a tarefa. Tente novamente.");
             }
+            window.location.reload();
         } catch (error) {
             console.error("Erro ao conectar com o servidor:", error);
         } finally {
